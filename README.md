@@ -86,7 +86,9 @@ var delegator = Delegator(document.body, {
     prefix: prefix
 })
 
-var elem = h("div.foo", [
+var elem = h("div.foo", {
+    "data-event-prefix": prefix
+}, [
     h("div.bar", { 
         "data-click": "text-clicked:bar"
     }, "bar"),
