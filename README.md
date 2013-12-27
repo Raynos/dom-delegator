@@ -12,12 +12,131 @@
 
 Decorate elements with delegated events
 
-## Example
+## Example DOM
 
 ```js
-var domDelegator = require("dom-delegator")
+var document = require("global/document")
+var Delegator = require("dom-delegator")
+var addEvent = require("dom-delegator/event")
+var h = require("hyperscript")
+var uuid = require("uuid")
 
-// TODO. Show example
+var prefix = uuid()
+var delegator = Delegator(document.body, {
+    prefix: prefix
+})
+
+var elem = h("div.foo", [
+    h("div.bar", "bar"),
+    h("span.baz", "baz")
+])
+var bar = elem.querySelector(".bar")
+var baz = elem.querySelector(".baz")
+document.body.appendChild(elem)
+
+
+// either add individual elems
+addEvent(bar, {
+    prefix: prefix,
+    type: "click",
+    name: "text-clicked",
+    data: { type: "bar" }
+})
+addEvent(baz, {
+    prefix: prefix,
+    type: "click",
+    name: "text-clicked",
+    data: { type: "baz" }
+})
+
+// or add multiple
+addEvent(elem, {
+    prefix: prefix
+    ".bar": {
+        type: "click",
+        name: "text-clicked",
+        data: { type: "baz" }      
+    } 
+    ".baz": {
+        type: "click",
+        name: "text-clicked",
+        data: { type: "baz" }
+    }
+})
+
+delegator.on("text-clicked", function (data, ev) {
+    var elem = ev.currentTarget
+    var value = ev.currentValue
+    var type = data.type
+
+    console.log("doSomething", elem, value, type)
+})
+```
+
+## Example data- attributes
+
+```js
+var document = require("global/document")
+var Delegator = require("dom-delegator")
+var h = require("hyperscript")
+var uuid = require("uuid")
+
+var prefix = uuid()
+var delegator = Delegator(document.body, {
+    prefix: prefix
+})
+
+var elem = h("div.foo", [
+    h("div.bar", { 
+        "data-click": "text-clicked:bar"
+    }, "bar"),
+    h("div.baz", {
+        "data-click": "text-clicked:baz"
+    }, "baz")
+])
+document.body.appendChild(elem)
+
+delegator.on("text-clicked", function (data, ev) {
+    var elem = ev.currentTarget
+    var value = ev.currentValue
+    var type = data
+
+    console.log("doSomething", elem, value, type)
+})
+```
+
+## Example JSONML
+
+```js
+var document = require("global/document")
+var Delegator = require("dom-delegator")
+var dom = require("jsonml-dom")
+var Event = require("jsonml-event")
+var uuid = require("uuid")
+
+var prefix = uuid()
+var delegator = Delegator(document.body, {
+    prefix: prefix
+})
+var event = Event(prefix)
+
+var elem = dom(["div.foo", [
+    ["div.bar", { 
+        "click": event("text-clicked", { type: "bar" })
+    }, "bar"],
+    ["div.baz", {
+        "click": event("text-clicked", { type: "baz" })
+    }, "baz"]
+]])
+document.body.appendChild(elem)
+
+delegator.on("text-clicked", function (data, ev) {
+    var elem = ev.currentTarget
+    var value = ev.currentValue
+    var type = data.type
+
+    console.log("doSomething", elem, value, type)
+})
 ```
 
 ## Installation
