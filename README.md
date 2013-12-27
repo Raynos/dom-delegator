@@ -242,6 +242,34 @@ We have now bound the `todoAdded` event less tightly to
   or `textarea` or `custom element` with a name called `'title'`
   the input handling code will still work.
 
+## Custom events
+
+The `type: "submit"` or `data-submit` event and the
+  `type: "change"` or `data-change` event are not the normal
+  DOM events for `addEventListener('submit')` or 
+  `addEventListener('change')` 
+
+`data-submit` and `data-change` actually have more complex
+  semantics. They can be bound to a container and well then
+  emit the named event every time any child changes by the
+  submit or change semantics.
+
+If bound to a container it will use `FormData(...)` to read
+  the currentValue as a hash of name to value of elements.
+
+If bound to a single element it will get the value of that 
+  element based on what kind of element it is.
+
+### submit semantics
+
+`submit` triggers on `keypress` if the key is ENTER or triggers
+  on a click if the click target is a `button` or `input` of 
+  type `"submit"`
+
+### change semantics
+
+`change` triggers on `change` (DOM change event) or on `keypress`
+
 ## Installation
 
 `npm install dom-delegator`
