@@ -81,6 +81,12 @@ Something will need to trigger the date change events, since we
  - solution doesn't require passing concrete functions to the
       rendering logic. The rendering and input handling most
       be loosely coupled.
+ - solution should allow passing data to the event listener.
+ - solution should discourage passing a DOM Event object to
+      listener. You shouldn't read the `ev` or `ev.target` in
+      your input handling code
+ - library should only do input handling. Not input handling AND
+      reactive rendering.
 
 ## Example DOM
 
