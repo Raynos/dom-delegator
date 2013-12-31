@@ -12,6 +12,76 @@
 
 Decorate elements with delegated events
 
+## Motivation
+
+When building a web application you don't want to deal with
+  messing around with the DOM directly if you can avoid it.
+
+What you really want to do is write application logic. Generally
+  how application logic works is that you react to some kind of
+  user input, run some logic and maybe change some state.
+
+Let's take a look at a calendar example. For a calendar we just
+  want to react to a bunch of date change events and update the
+  state of the calendar accordingly. We don't really care what
+  triggers the date change events.
+
+```js
+var Calendar = function () {
+    var calendarState = { ... }
+    var calendarInputs = { ... }
+
+    calendarInputs.dateChange(function (newDate) {
+        var d = new Date(newDate)
+
+        calendarState.theTime.set(d)
+    })
+}
+```
+
+The above code is basically the application logic you want to
+  express. Now imagine we had some kind of data binding that
+  re-rendered the template / view for the calendar each time
+  we update the calendarState.
+
+```js
+function render(calendarState) {
+    var WEEK = 1000 * 60 * 60 * 24 * 7
+    var prevWeek = +calendarState.theTime - WEEK
+    var nextWeek = +calendarState.theTime + WEEK
+
+    return h("div", [
+        h("table", calendarGrid(calendarState)),
+        h("div.controls", [
+            h("button.prev", {
+                "data-click": "dateChange:" + prevWeek
+            }, "previous week"),
+            h("button.next", {
+                "data-click": "dateChange:" + nextWeek
+            }, "next week")
+        ])
+    ])
+}
+```
+
+Something will need to trigger the date change events, since we
+  don't want to write any manual DOM code and since we already
+  have a reactive templating system we should just add hooks to
+  our templates that say when this DOM event occurs I want you
+  to trigger this "meaningful" event in my system
+
+### Other motivations
+
+ - solution should be a module, not a framework
+ - solution should work recursively without namespace conflicts
+ - solution should use event delegation, it shouldnt require
+      binding to each DOM element manually
+ - solution should allow rendering logic to be seperate from
+      input handling logic.
+ - solution doesn't require passing concrete functions to the
+      rendering logic. The rendering and input handling most
+      be loosely coupled.
+
 ## Example DOM
 
 ```js
