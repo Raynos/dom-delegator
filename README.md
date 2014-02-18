@@ -93,15 +93,13 @@ Something will need to trigger the date change events, since we
 ```js
 var document = require("global/document")
 var Delegator = require("dom-delegator")
-var addEvent = require("dom-delegator/event")
 var h = require("hyperscript")
-var uuid = require("uuid")
+var addEvent = require("dom-delegator/add-event")
 
-var prefix = uuid()
-var delegator = Delegator(document.body, {
-    prefix: prefix
-})
-
+var delegator = Delegator(document.body, [
+  "textClicked"
+])
+var sinks = delegator.sinks
 var elem = h("div.foo", [
     h("div.bar", "bar"),
     h("span.baz", "baz")
@@ -111,41 +109,18 @@ var baz = elem.querySelector(".baz")
 document.body.appendChild(elem)
 
 
-// either add individual elems
-addEvent(bar, {
-    prefix: prefix,
-    type: "click",
-    name: "text-clicked",
-    data: { type: "bar" }
+// add individual elems.
+addEvent(bar, "click", sinks.textClicked, {
+  type: "bar"
 })
-addEvent(baz, {
-    prefix: prefix,
-    type: "click",
-    name: "text-clicked",
-    data: { type: "baz" }
+addEvent(baz, "click", sinks.textClicked, {
+  type: "baz"
 })
 
-// or add multiple
-addEvent(elem, {
-    prefix: prefix
-    ".bar": {
-        type: "click",
-        name: "text-clicked",
-        data: { type: "baz" }      
-    } 
-    ".baz": {
-        type: "click",
-        name: "text-clicked",
-        data: { type: "baz" }
-    }
-})
+delegator.sources.textClicked(function (tuple) {
+    var value = tuple.values[0]
 
-delegator.on("text-clicked", function (data, ev) {
-    var elem = ev.currentTarget
-    var value = ev.currentValue
-    var type = data.type
-
-    console.log("doSomething", elem, value, type)
+    console.log("doSomething", value.type)
 })
 ```
 
@@ -155,31 +130,29 @@ delegator.on("text-clicked", function (data, ev) {
 var document = require("global/document")
 var Delegator = require("dom-delegator")
 var h = require("hyperscript")
-var uuid = require("uuid")
+var event = require("dom-delegator/event")
 
-var prefix = uuid()
-var delegator = Delegator(document.body, {
-    prefix: prefix
-})
+var delegator = Delegator(document.body, [
+  "textClicked"
+])
+var sinks = delegator.sinks
 
 var elem = h("div.foo", {
     "data-event-prefix": prefix
 }, [
     h("div.bar", { 
-        "data-click": "text-clicked:bar"
+        "data-click": event(sinks.textClicked, { type: "bar" })
     }, "bar"),
     h("div.baz", {
-        "data-click": "text-clicked:baz"
+        "data-click": event(sinks.textClicked, { type: "baz" })
     }, "baz")
 ])
 document.body.appendChild(elem)
 
-delegator.on("text-clicked", function (data, ev) {
-    var elem = ev.currentTarget
-    var value = ev.currentValue
-    var type = data
+delegator.sources.textClicked(function (tuple) {
+    var value = tuple.values[0]
 
-    console.log("doSomething", elem, value, type)
+    console.log("doSomething", value.type)
 })
 ```
 
@@ -188,32 +161,28 @@ delegator.on("text-clicked", function (data, ev) {
 ```js
 var document = require("global/document")
 var Delegator = require("dom-delegator")
+var event = require("jsonml-event")
 var dom = require("jsonml-dom")
-var Event = require("jsonml-event")
-var uuid = require("uuid")
 
-var prefix = uuid()
-var delegator = Delegator(document.body, {
-    prefix: prefix
-})
-var event = Event(prefix)
+var delegator = Delegator(document.body, [
+  "textClicked"
+])
+var sinks = delegator.sinks
 
 var elem = dom(["div.foo", [
     ["div.bar", { 
-        "click": event("text-clicked", { type: "bar" })
+        "click": event(sinks.textClicked, { type: "bar" })
     }, "bar"],
     ["div.baz", {
-        "click": event("text-clicked", { type: "baz" })
+        "click": event(sinks.textClicked, { type: "baz" })
     }, "baz"]
 ]])
 document.body.appendChild(elem)
 
-delegator.on("text-clicked", function (data, ev) {
-    var elem = ev.currentTarget
-    var value = ev.currentValue
-    var type = data.type
+delegator.sources.textClicked(function (tuple) {
+    var value = tuple.values[0]
 
-    console.log("doSomething", elem, value, type)
+    console.log("doSomething", value.type)
 })
 ```
 
@@ -230,10 +199,10 @@ For example you might have an `input.js` where you handle user
 // input.js
 module.exports = Input
 
-function Input(state, delegator) {
+function Input(state, sources) {
     // when the input event todo addition occurs
     // create a fresh item and add it
-    delegator.on("todoAdded", function (data, ev) {
+    sources.todoAdded(function (data, ev) {
         var value = ev.currentValue
         var todo = { title: value, completed: false }
         state.todos.push(todo)
@@ -241,7 +210,7 @@ function Input(state, delegator) {
 
     // when the input event todo removal occurs
     // find the item and delete it from the list
-    delegator.on("todoRemoved", function (data, ev) {
+    sources.todoRemoved(function (data, ev) {
         var id = data
         var index = -1
         state.todos.some(function (todo, itemIndex) {
@@ -278,7 +247,7 @@ We will use `HTML` and the `data- attributes` style interface
         <button data-click="todoRemoved:4">Remove</button>
     </li>
 </ul>
-<input class="add-todo" data-submit="todoAdded" />
+<input class="add-todo" name="title" data-submit="todoAdded" />
 ```
 
 Here we have decorated the todo item UI with a click event.
@@ -306,7 +275,8 @@ Then update the input handler
 ```js
 // when the input event todo addition occurs
 // create a fresh item and add it
-delegator.on("todoAdded", function (data, ev) {
+delegator.sources.todoAdded(function (tuple) {
+    var ev = tuple.ev
     var title = ev.currentValue.title
     var todo = { title: title, completed: false }
     state.todos.push(todo)
