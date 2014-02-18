@@ -7,21 +7,32 @@
   "repository": "git://github.com/Raynos/dom-delegator.git",
   "main": "index",
   "homepage": "https://github.com/Raynos/dom-delegator",
-  "contributors": [{
-    "name": "Raynos"
-  }],
+  "contributors": [
+    {
+      "name": "Raynos"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/Raynos/dom-delegator/issues",
     "email": "raynos2@gmail.com"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "tape": "~1.0.2"
+  "dependencies": {
+    "global": "~2.0.7",
+    "weakmap": "0.0.6",
+    "geval": "~2.0.3"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "http://github.com/Raynos/dom-delegator/raw/master/LICENSE"
-  }],
+  "devDependencies": {
+    "tape": "~2.4.2",
+    "uuid": "~1.4.1",
+    "hyperscript": "~1.4.0",
+    "synthetic-dom-events": "~0.1.1"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/Raynos/dom-delegator/raw/master/LICENSE"
+    }
+  ],
   "scripts": {
     "test": "node ./test/index.js",
     "start": "node ./index.js",
