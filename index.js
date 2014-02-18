@@ -1,5 +1,4 @@
-module.exports = domDelegator
+var DOMSurface = require("./dom-surface.js")
+var createDelegator = require("./create-delegator.js")
 
-function domDelegator() {
-
-}
+module.exports = createDelegator(DOMSurface)
