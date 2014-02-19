@@ -6,13 +6,6 @@ var defaultMap = require("./event-map.js")
 var listen = require("./listen.js")
 var Sink = require("./sink.js")
 
-var allEvents = [
-    "blur", "focus", "focusin", "focusout", "load", "resize",
-    "scroll", "unload", "click", "dblclick", "mousedown",
-    "mouseup", "change", "select", "submit", "keydown",
-    "keypress", "keyup", "error", "contextmenu"
-]
-
 module.exports = createDelegator
 
 function createDelegator(surface) {
@@ -39,8 +32,8 @@ function createDelegator(surface) {
         }
 
         if (opts.defaultEvents !== false) {
-            allEvents.forEach(function (eventName) {
-                listen(delegator, eventName)
+            surface.allEvents.forEach(function (eventName) {
+                listen(surface, delegator, eventName)
             })
         }
 

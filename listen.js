@@ -2,11 +2,11 @@ var  getListener = require("./get-listener.js")
 
 module.exports = listen
 
-function listen(delegator, eventName) {
+function listen(surface, delegator, eventName) {
     var target = delegator.target
     var map = delegator.map
 
-    target.addEventListener(eventName, function (ev) {
+    surface.addListener(target, eventName, function (ev) {
         var listener = getListener(map, ev.target, ev.type)
 
         if (!listener) {
@@ -14,5 +14,5 @@ function listen(delegator, eventName) {
         }
 
         listener.sink.dispatch(listener, ev)
-    }, true)
+    })
 }
