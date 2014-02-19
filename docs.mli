@@ -47,10 +47,8 @@ dom-delegator := CreateDelegator<Target>
 dom-delegator/add-event := (
     target: Target,
     type: String,
-    data: Any,
-    opts?: {
-        map?: WeakMap
-    }
+    sink: Sink,
+    data: Any
 )
 
 dom-delegator/create-delegator :=
