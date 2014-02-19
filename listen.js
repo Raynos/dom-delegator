@@ -7,7 +7,7 @@ function listen(surface, delegator, eventName) {
     var map = delegator.map
 
     surface.addListener(target, eventName, function (ev) {
-        var listener = getListener(map, ev.target, ev.type)
+        var listener = getListener(map, ev.target, eventName)
 
         if (!listener) {
             return

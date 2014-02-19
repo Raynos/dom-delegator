@@ -2,7 +2,9 @@ type Target := DOMNode
 
 type Surface := {
     is: (target: Any) => Boolean,
-    defaultTarget: Target
+    defaultTarget: Target,
+    allEvents: Array<String>,
+    addListener: (Target, eventName: String, Function) => void
 }
 
 type DelegatorEvent<T> := {
