@@ -17,7 +17,7 @@ function dispatch(listener, ev) {
     var sink = listener.sink
 
     sink.broadcast({
-        values: [listener.data],
+        value: listener.data,
         ev: null
     })
 }
