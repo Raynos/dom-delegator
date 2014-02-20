@@ -1,7 +1,7 @@
 var test = require("tape")
 var h = require("hyperscript")
 var uuid = require("uuid")
-var DOMEvent = require("synthetic-dom-events");
+var DOMEvent = require("synthetic-dom-events")
 var setImmediate = require("timers").setImmediate
 var document = require("global/document")
 

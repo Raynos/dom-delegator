@@ -39,6 +39,8 @@ type Listener<T> := {
 
 type Sink<T> := {
     dispatch: (Listener<T>, DOMEvent) => void,
+    key: String,
+    id: String,
     map: WeakMap
 }
 

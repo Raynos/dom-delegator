@@ -2,9 +2,13 @@ var weakMap = require("weakmap")
 var GevalEvent = require("geval/event")
 var uuid = require("uuid")
 
-var defaultMap = require("./event-map.js")
 var listen = require("./listen.js")
 var Sink = require("./sink.js")
+
+var DEFAULT_MAP = require("./constants/event-map.js")
+var DELIMINATOR = require("./constants/deliminator.js")
+var ID_SEPERATOR = require("./constants/id-seperator.js")
+var SINK_MAP = require("./constants/sink-map.js")
 
 module.exports = createDelegator
 
@@ -16,12 +20,12 @@ function createDelegator(surface) {
         
         opts = args.opts
 
-        if (!opts.map && opts.shared !== false) {
-            opts.map = defaultMap
+        if (!opts.map && opts.global !== true) {
+            opts.map = DEFAULT_MAP
         }
 
         var map = opts.map || weakMap()
-        map.id = map.id || uuid()
+        var id = (map.id = map.id || uuid())
        
         var events = createEvents(map, args.eventNames)
         var delegator = {
@@ -30,6 +34,7 @@ function createDelegator(surface) {
             map: map,
             target: args.target
         }
+        SINK_MAP[id] = events.sinks
 
         if (opts.defaultEvents !== false) {
             surface.allEvents.forEach(function (eventName) {
@@ -57,6 +62,15 @@ function createDelegator(surface) {
         opts = opts || {}
         eventNames = eventNames || []
         target = target || surface.defaultTarget
+
+        var replaceDelimRegex = new RegExp(DELIMINATOR, "g")
+        var replaceSepRegex = new RegExp(ID_SEPERATOR, "g")
+
+        eventNames = eventNames.map(function (eventName) {
+            return eventName
+                .replace(replaceDelimRegex, "")
+                .replace(replaceSepRegex, "")
+        })
 
         return { opts: opts, eventNames: eventNames, target: target }
     }
