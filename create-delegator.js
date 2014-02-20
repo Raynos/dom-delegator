@@ -25,8 +25,9 @@ function createDelegator(surface) {
         }
 
         var map = opts.map || weakMap()
-        var id = (map.id = map.id || uuid())
-       
+        var id = map.id || opts.id || uuid()
+        map.id = id
+
         var events = createEvents(map, args.eventNames)
         var delegator = {
             sources: events.sources,
