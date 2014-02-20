@@ -137,9 +137,7 @@ var delegator = Delegator(document.body, [
 ])
 var sinks = delegator.sinks
 
-var elem = h("div.foo", {
-    "data-event-prefix": prefix
-}, [
+var elem = h("div.foo", [
     h("div.bar", { 
         "data-click": event(sinks.textClicked, { type: "bar" })
     }, "bar"),
