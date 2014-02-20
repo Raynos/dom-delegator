@@ -33,7 +33,8 @@ function createDelegator(surface) {
             sources: events.sources,
             sinks: events.sinks,
             map: map,
-            target: args.target
+            target: args.target,
+            listenTo: listenTo
         }
         SINK_MAP[id] = events.sinks
 
@@ -44,6 +45,10 @@ function createDelegator(surface) {
         }
 
         return delegator
+
+        function listenTo(eventName) {
+            listen(surface, delegator, eventName)
+        }
     }
 
     function parseArgs(target, eventNames, opts) {
