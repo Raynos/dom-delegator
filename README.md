@@ -118,7 +118,7 @@ addEvent(baz, "click", sinks.textClicked, {
 })
 
 delegator.sources.textClicked(function (tuple) {
-    var value = tuple.values[0]
+    var value = tuple.value
 
     console.log("doSomething", value.type)
 })
@@ -150,7 +150,7 @@ var elem = h("div.foo", {
 document.body.appendChild(elem)
 
 delegator.sources.textClicked(function (tuple) {
-    var value = tuple.values[0]
+    var value = tuple.value
 
     console.log("doSomething", value.type)
 })
@@ -180,7 +180,7 @@ var elem = dom(["div.foo", [
 document.body.appendChild(elem)
 
 delegator.sources.textClicked(function (tuple) {
-    var value = tuple.values[0]
+    var value = tuple.value
 
     console.log("doSomething", value.type)
 })
