@@ -58,7 +58,7 @@ dom-delegator/create-delegator :=
 
 dom-delegator/dom-surface := Surface
 
-dom-delegator/event-map := WeakMap
+dom-delegator/event := (Sink, data: Any) => String
 
 dom-delegator/get-listener := (
     WeakMap, Target, type: String
