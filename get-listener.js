@@ -16,7 +16,7 @@ function getListener(surface, map, target, type) {
     // try parsing from data- attributes
     if (!tuple) {
         var value = surface.fetchAttr(target, type)
-        tuple = unpackAttrValue(value)
+        tuple = unpackAttrValue(map, value)
     }
 
     if (!tuple) {
@@ -31,7 +31,7 @@ function getListener(surface, map, target, type) {
     }
 }
 
-function unpackAttrValue(value) {
+function unpackAttrValue(map, value) {
     if (!value) {
         return null
     }
@@ -41,6 +41,10 @@ function unpackAttrValue(value) {
     var headParts = head.split("@")
     var key = headParts[0]
     var id = headParts[1] || DEFAULT_MAP.id
+
+    if (map.id !== id) {
+        return null
+    }
 
     var sinks = SINK_MAP[id]
     if (!sinks) {

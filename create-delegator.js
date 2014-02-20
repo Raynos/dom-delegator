@@ -20,7 +20,7 @@ function createDelegator(surface) {
         
         opts = args.opts
 
-        if (!opts.map && opts.global !== true) {
+        if (!opts.map && opts.global === true) {
             opts.map = DEFAULT_MAP
         }
 
