@@ -18,13 +18,10 @@
   },
   "dependencies": {
     "global": "~2.0.7",
-    "weakmap": "0.0.6",
-    "geval": "~2.0.3",
-    "data-set": "~0.2.2"
+    "uuid": "~1.4.1"
   },
   "devDependencies": {
     "tape": "~2.4.2",
-    "uuid": "~1.4.1",
     "hyperscript": "~1.4.0",
     "synthetic-dom-events": "~0.1.1",
     "testling": "~1.6.0",

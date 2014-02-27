@@ -1,5 +1,4 @@
 var document = require("global/document")
-var DataSet = require("data-set")
 
 var allEvents = [
     "blur", "focus", "focusin", "focusout", "load", "resize",
@@ -13,8 +12,7 @@ module.exports = {
     defaultTarget: document,
     allEvents: allEvents,
     addListener: addListener,
-    getParent: getParent,
-    fetchAttr: fetchAttr
+    getParent: getParent
 }
 
 function addListener(target, eventName, listener) {
@@ -27,8 +25,4 @@ function isSurface(target) {
 
 function getParent(target) {
     return target.parentNode
-}
-
-function fetchAttr(target, type) {
-    return DataSet(target)[type]
 }
