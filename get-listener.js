@@ -1,26 +1,17 @@
-var DELIMINATOR = require("./constants/deliminator.js")
-var ID_SEPERATOR = require("./constants/id-seperator.js")
-var DEFAULT_MAP = require("./constants/event-map.js")
-var SINK_MAP = require("./constants/sink-map.js")
+var getField = require("./symbol/get-field.js")
 
 module.exports = getListener
 
-function getListener(surface, map, target, type) {
+function getListener(surface, id, target, type) {
     if (target === null) {
         return null
     }
 
-    var events = map.get(target)
+    var events = getField(target, id)
     var tuple = events && events[type]
 
-    // try parsing from data- attributes
     if (!tuple) {
-        var value = surface.fetchAttr(target, type)
-        tuple = unpackAttrValue(map, value)
-    }
-
-    if (!tuple) {
-        return getListener(surface, map,
+        return getListener(surface, id,
             surface.getParent(target), type)
     }
 
@@ -29,47 +20,4 @@ function getListener(surface, map, target, type) {
         data: tuple[0],
         sink: tuple[1]
     }
-}
-
-function unpackAttrValue(map, value) {
-    if (!value) {
-        return null
-    }
-
-    var parts = value.split(DELIMINATOR)
-    var head = parts[0]
-    var headParts = head.split("@")
-    var key = headParts[0]
-    var id = headParts[1] || DEFAULT_MAP.id
-
-    if (map.id !== id) {
-        return null
-    }
-
-    var sinks = SINK_MAP[id]
-    if (!sinks) {
-        return null
-    }
-
-    var sink = sinks[key]
-
-    if (!sink) {
-        return null
-    }
-
-    var rest = parts.slice(1).join(DELIMINATOR)
-    var data = parseOrUndefined(rest)
-
-    return [data, sink]
-}
-
-function parseOrUndefined(data) {
-    var json
-    try {
-        json = JSON.parse(data)
-    } catch (err) {
-        json = undefined
-    }
-
-    return json
 }

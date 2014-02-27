@@ -95,11 +95,11 @@ var document = require("global/document")
 var Delegator = require("dom-delegator")
 var h = require("hyperscript")
 var addEvent = require("dom-delegator/add-event")
+var EventSinks = require("event-sinks/geval")
 
-var delegator = Delegator(document.body, [
-  "textClicked"
-])
-var sinks = delegator.sinks
+var delegator = Delegator(document.body)
+var events = EventSinks(delegator.id, ["textClicked"])
+var sinks = events.sinks
 var elem = h("div.foo", [
     h("div.bar", "bar"),
     h("span.baz", "baz")
@@ -117,25 +117,25 @@ addEvent(baz, "click", sinks.textClicked, {
   type: "baz"
 })
 
-delegator.sources.textClicked(function (tuple) {
+events.textClicked(function (tuple) {
     var value = tuple.value
 
     console.log("doSomething", value.type)
 })
 ```
 
-## Example data- attributes
+## Example data- attributes (Not working yet)
 
 ```js
 var document = require("global/document")
 var Delegator = require("dom-delegator")
 var h = require("hyperscript")
 var event = require("dom-delegator/event")
+var EventSinks = require("event-sinks/geval")
 
-var delegator = Delegator(document.body, [
-  "textClicked"
-])
-var sinks = delegator.sinks
+var delegator = Delegator(document.body)
+var events = EventSinks(delegator.id, ["textClicked"])
+var sinks = events.sinks
 
 var elem = h("div.foo", [
     h("div.bar", { 
@@ -147,44 +147,14 @@ var elem = h("div.foo", [
 ])
 document.body.appendChild(elem)
 
-delegator.sources.textClicked(function (tuple) {
+delegator.textClicked(function (tuple) {
     var value = tuple.value
 
     console.log("doSomething", value.type)
 })
 ```
 
-## Example JSONML
-
-```js
-var document = require("global/document")
-var Delegator = require("dom-delegator")
-var event = require("jsonml-event")
-var dom = require("jsonml-dom")
-
-var delegator = Delegator(document.body, [
-  "textClicked"
-])
-var sinks = delegator.sinks
-
-var elem = dom(["div.foo", [
-    ["div.bar", { 
-        "click": event(sinks.textClicked, { type: "bar" })
-    }, "bar"],
-    ["div.baz", {
-        "click": event(sinks.textClicked, { type: "baz" })
-    }, "baz"]
-]])
-document.body.appendChild(elem)
-
-delegator.sources.textClicked(function (tuple) {
-    var value = tuple.value
-
-    console.log("doSomething", value.type)
-})
-```
-
-## Concept.
+## Concept. (Not working)
 
 The concept behind `dom-delegator` is to seperate declaring
   which UI elements trigger well named user input events from 
@@ -286,7 +256,7 @@ We have now bound the `todoAdded` event less tightly to
   or `textarea` or `custom element` with a name called `'title'`
   the input handling code will still work.
 
-## Custom events
+## Custom events (Not implemented)
 
 The `type: "submit"` or `data-submit` event and the
   `type: "change"` or `data-change` event are not the normal

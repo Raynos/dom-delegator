@@ -1,10 +1,23 @@
+var getField = require("./symbol/get-field.js")
+var setField = require("./symbol/set-field.js")
+
 module.exports = addEvent
 
 function addEvent(target, type, sink, data) {
-    var map = sink.map
+    var id = sink.id
 
-    var events = map.get(target) || {}
+    var events = getField(target, id)
+    sink.dispatch = dispatch
     events[type] = [data, sink]
 
-    map.set(target, events)
+    setField(target, id, events)
+}
+
+function dispatch(listener, ev) {
+    var sink = listener.sink
+
+    sink.write({
+        value: listener.data,
+        ev: null
+    })
 }

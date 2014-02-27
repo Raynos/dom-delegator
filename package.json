@@ -27,7 +27,8 @@
     "uuid": "~1.4.1",
     "hyperscript": "~1.4.0",
     "synthetic-dom-events": "~0.1.1",
-    "testling": "~1.6.0"
+    "testling": "~1.6.0",
+    "event-sinks": "~1.0.1"
   },
   "licenses": [
     {

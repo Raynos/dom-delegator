@@ -1,18 +1,21 @@
-var  getListener = require("./get-listener.js")
+module.exports = createListen
 
-module.exports = listen
+function createListen(surface, getListener) {
+    return listen
 
-function listen(surface, delegator, eventName) {
-    var target = delegator.target
-    var map = delegator.map
+    function listen(delegator, eventName) {
+        var target = delegator.target
+        var id = delegator.id
 
-    surface.addListener(target, eventName, function (ev) {
-        var listener = getListener(surface, map, ev.target, eventName)
+        surface.addListener(target, eventName, function (ev) {
+            var listener = getListener(surface, id, ev.target, eventName)
 
-        if (!listener) {
-            return
-        }
+            if (!listener) {
+                return
+            }
 
-        listener.sink.dispatch(listener, ev)
-    })
+            listener.sink.dispatch(listener, ev)
+        })
+    }
+
 }

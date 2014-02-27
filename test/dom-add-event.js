@@ -4,6 +4,7 @@ var uuid = require("uuid")
 var DOMEvent = require("synthetic-dom-events")
 var setImmediate = require("timers").setImmediate
 var document = require("global/document")
+var EventSinks = require("event-sinks/geval")
 
 var Delegator = require("../index.js")
 var addEvent = require("../add-event.js")
@@ -24,15 +25,16 @@ test("can listen to events", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
-    var d = Delegator(elem, ["foo"])
+    var d = Delegator(elem)
+    var events = EventSinks(d.id, ["foo"])
     var called = 0
     var id = uuid()
 
-    addEvent(elem, "click", d.sinks.foo, {
+    addEvent(elem, "click", events.sinks.foo, {
         id: id
     })
 
-    d.sources.foo(function (tuple) {
+    events.foo(function (tuple) {
         called++
 
         assert.ok("value" in tuple)
@@ -60,8 +62,9 @@ test("can set different data on same sink", function (assert) {
     ])
     document.body.appendChild(elem)
 
-    var d = Delegator(elem, ["foo"])
-    var foo = d.sinks.foo
+    var d = Delegator(elem)
+    var events = EventSinks(d.id, ["foo"])
+    var foo = events.sinks.foo
     var tuples = []
 
     addEvent(elem.querySelector(".bar"), "click", foo, {
@@ -72,7 +75,7 @@ test("can set different data on same sink", function (assert) {
         name: "baz"
     })
 
-    d.sources.foo(function (tuple) {
+    events.foo(function (tuple) {
         tuples.push(tuple)
     })
 
@@ -99,9 +102,11 @@ test("can register multiple sinks", function (assert) {
     ])
     document.body.appendChild(elem)
 
-    var d = Delegator(elem, ["bar", "baz"])
-    var bar  = d.sinks.bar, baz = d.sinks.baz
-    var events = {}
+    var d = Delegator(elem)
+    var events = EventSinks(d.id, ["bar", "baz"])
+
+    var bar = events.sinks.bar, baz = events.sinks.baz
+    var hash = {}
 
     addEvent(elem.querySelector(".bar"), "click", bar, {
         name: "baz"
@@ -111,12 +116,12 @@ test("can register multiple sinks", function (assert) {
         name: "bar"
     })
 
-    d.sources.bar(function (tuple) {
-        events.bar = tuple
+    events.bar(function (tuple) {
+        hash.bar = tuple
     })
 
-    d.sources.baz(function (tuple) {
-        events.baz = tuple
+    events.baz(function (tuple) {
+        hash.baz = tuple
     })
 
     var ev = createEvent("click")
@@ -126,10 +131,10 @@ test("can register multiple sinks", function (assert) {
     elem.querySelector(".baz").dispatchEvent(ev2)
 
     setImmediate(function () {
-        assert.ok("bar" in events)
-        assert.ok("baz" in events)
-        assert.equal(events.bar.value.name, "baz")
-        assert.equal(events.baz.value.name, "bar")
+        assert.ok("bar" in hash)
+        assert.ok("baz" in hash)
+        assert.equal(hash.bar.value.name, "baz")
+        assert.equal(hash.baz.value.name, "bar")
 
         document.body.removeChild(elem)
         assert.end()

@@ -1,3 +1,5 @@
+type Sink = require('event-sinks').Sink
+
 type Target := DOMNode
 
 type Surface := {
@@ -15,18 +17,14 @@ type DelegatorEvent<T> := {
 }
 
 type Delegator<Target> := {
-    sources: Object<String, Event<DelegatorEvent<T>>>,
-    sinks: Object<String, Sink>,
-    map: WeakMap,
+    id: String
     target: Target
 }
 
 type CreateDelegator<Target> := (
     target?: Target,
-    events?: Array<String>,
     opts?: {
-        map?: WeakMap,
-        shared?: Boolean,
+        id: String,
         defaultEvents?: Boolean
     }
 ) => Delegator<Target>
@@ -34,15 +32,12 @@ type CreateDelegator<Target> := (
 type Listener<T> := {
     currentTarget: Target,
     data: T,
-    sink: Sink
+    sink: Sink & {
+        dispatch: EventDispatcher
+    }
 }
 
-type Sink<T> := {
-    dispatch: (Listener<T>, DOMEvent) => void,
-    key: String,
-    id: String,
-    map: WeakMap
-}
+type EventDispatcher<T> := (Listener<T>, DOMEvent) => void
 
 dom-delegator := CreateDelegator<Target>
 
@@ -58,17 +53,8 @@ dom-delegator/create-delegator :=
 
 dom-delegator/dom-surface := Surface
 
-dom-delegator/event := (Sink, data: Any) => String
-
 dom-delegator/get-listener := (
-    WeakMap, Target, type: String
+    id: String, Target, type: String
 ) => null | Listener<T>
 
 dom-delegator/listen := (Delegator, eventName: String) => void
-
-dom-delegator/sink := ({
-    id: String,
-    key: String,
-    broadcast: (T) => void,
-    map: WeakMap
-}) => Sink<T>
