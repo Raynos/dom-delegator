@@ -23,7 +23,7 @@ function addListener(target, eventName, listener) {
 }
 
 function isSurface(target) {
-    return typeof target.nodeName === "string"
+    return target && typeof target.nodeName === "string"
 }
 
 function getParent(target) {
