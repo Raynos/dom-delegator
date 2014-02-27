@@ -30,30 +30,30 @@ Also see [`html-delegator`](https://github.com/Raynos/html-delegator)
 
 ## Example
 
+```html
+<div class='foo'>
+    <div class='bar'>bar</div>
+    <div class='baz'>baz</div>
+</div>
+```
+
 ```js
 var document = require("global/document")
 var Delegator = require("dom-delegator")
-var h = require("hyperscript")
 var addEvent = require("dom-delegator/add-event")
 var EventSinks = require("event-sinks/geval")
 
 var delegator = Delegator(document.body)
 var events = EventSinks(delegator.id, ["textClicked"])
 var sinks = events.sinks
-var elem = h("div.foo", [
-    h("div.bar", "bar"),
-    h("span.baz", "baz")
-])
-var bar = elem.querySelector(".bar")
-var baz = elem.querySelector(".baz")
-document.body.appendChild(elem)
 
+var elem = document.querySelector(".foo")
 
 // add individual elems. (in a different file?)
-addEvent(bar, "click", sinks.textClicked, {
+addEvent(elem.querySelector(".bar"), "click", sinks.textClicked, {
   type: "bar"
 })
-addEvent(baz, "click", sinks.textClicked, {
+addEvent(elem.querySelector(".baz"), "click", sinks.textClicked, {
   type: "baz"
 })
 
