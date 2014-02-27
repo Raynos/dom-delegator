@@ -6,7 +6,10 @@ type Surface := {
     is: (target: Any) => Boolean,
     defaultTarget: Target,
     allEvents: Array<String>,
-    addListener: (Target, eventName: String, Function) => void
+    addListener: (Target, eventName: String, Function) => void,
+    getListener: (
+        Surface, id: String, Target, type: String
+    ) => null | Listener<T>
 }
 
 type DelegatorEvent<T> := {
@@ -39,9 +42,7 @@ type Listener<T> := {
 
 type EventDispatcher<T> := (Listener<T>, DOMEvent) => void
 
-type GetListener := (
-    Surface, id: String, Target, type: String
-) => null | Listener<T>
+type GetListener := 
 
 dom-delegator := CreateDelegator<Target>
 
@@ -57,7 +58,8 @@ dom-delegator/create-delegator :=
 
 dom-delegator/dom-surface := Surface
 
-dom-delegator/get-listener := GetListener<T>
+dom-delegator/get-listener := (
+    Surface, id: String, Target, type: String
+) => null | Listener<T>
 
-dom-delegator/listen := (Surface, GetListener<T>) =>
-    (Delegator, eventName: String) => void
+dom-delegator/listen := (Surface, Delegator, eventName: String) => void

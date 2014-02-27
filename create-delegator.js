@@ -1,13 +1,10 @@
 var uuid = require("uuid")
 
-var getListener = require("./get-listener.js")
-var createListen = require("./listen.js")
+var listen = require("./listen.js")
 
 module.exports = createDelegator
 
 function createDelegator(surface) {
-    var listen = createListen(surface, getListener)
-
     return Delegator
 
     function Delegator(target, opts) {
@@ -27,14 +24,14 @@ function createDelegator(surface) {
 
         if (opts.defaultEvents !== false) {
             surface.allEvents.forEach(function (eventName) {
-                listen(delegator, eventName)
+                listen(surface, delegator, eventName)
             })
         }
 
         return delegator
 
         function listenTo(eventName) {
-            listen(delegator, eventName)
+            listen(surface, delegator, eventName)
         }
     }
 }

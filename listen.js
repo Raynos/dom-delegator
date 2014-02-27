@@ -1,21 +1,17 @@
-module.exports = createListen
+module.exports = listen
 
-function createListen(surface, getListener) {
-    return listen
+function listen(surface, delegator, eventName) {
+    var target = delegator.target
+    var id = delegator.id
+    var getListener = surface.getListener
 
-    function listen(delegator, eventName) {
-        var target = delegator.target
-        var id = delegator.id
+    surface.addListener(target, eventName, function (ev) {
+        var listener = getListener(surface, id, ev.target, eventName)
 
-        surface.addListener(target, eventName, function (ev) {
-            var listener = getListener(surface, id, ev.target, eventName)
+        if (!listener) {
+            return
+        }
 
-            if (!listener) {
-                return
-            }
-
-            listener.sink.dispatch(listener, ev)
-        })
-    }
-
+        listener.sink.dispatch(listener, ev)
+    })
 }
