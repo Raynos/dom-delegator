@@ -39,6 +39,10 @@ type Listener<T> := {
 
 type EventDispatcher<T> := (Listener<T>, DOMEvent) => void
 
+type GetListener := (
+    Surface, id: String, Target, type: String
+) => null | Listener<T>
+
 dom-delegator := CreateDelegator<Target>
 
 dom-delegator/add-event := (
@@ -53,8 +57,7 @@ dom-delegator/create-delegator :=
 
 dom-delegator/dom-surface := Surface
 
-dom-delegator/get-listener := (
-    id: String, Target, type: String
-) => null | Listener<T>
+dom-delegator/get-listener := GetListener<T>
 
-dom-delegator/listen := (Delegator, eventName: String) => void
+dom-delegator/listen := (Surface, GetListener<T>) =>
+    (Delegator, eventName: String) => void
