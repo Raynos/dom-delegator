@@ -61,6 +61,8 @@ addEvent(elem.querySelector(".baz"), "click", sinks.textClicked, {
 events.textClicked(function (tuple) {
     var value = tuple.value
 
+    // either 'bar' or 'bar' depends on which 
+    // `<div>` was clicked
     console.log("doSomething", value.type)
 })
 ```
