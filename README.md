@@ -44,18 +44,18 @@ var Delegator = require("dom-delegator")
 var addEvent = require("dom-delegator/add-event")
 var EventSinks = require("event-sinks/geval")
 
-var delegator = Delegator(document.body)
-var events = EventSinks(delegator.id, ["textClicked"])
+var del = Delegator(document.body)
+var events = EventSinks(del.id, ["textClicked"])
 var sinks = events.sinks
 
 var elem = document.querySelector(".foo")
 
 // add individual elems. (in a different file?)
-addEvent(elem.querySelector(".bar"), "click", sinks.textClicked, {
-  type: "bar"
+addEvent(del.id, elem.querySelector(".bar"), "click", function (ev) {
+  sinks.textClicked.write({ value: { type: 'bar' }})
 })
-addEvent(elem.querySelector(".baz"), "click", sinks.textClicked, {
-  type: "baz"
+addEvent(del.id, elem.querySelector(".baz"), "click", function (ev) {
+  sinks.textClicked.write({ value: { type: 'baz' }})
 })
 
 // add a listener, (in a different file?)
