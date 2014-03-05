@@ -8,16 +8,15 @@ function getListener(surface, id, target, type) {
     }
 
     var events = getField(target, id)
-    var tuple = events && events[type]
+    var handler = events && events[type]
 
-    if (!tuple) {
+    if (!handler) {
         return getListener(surface, id,
             surface.getParent(target), type)
     }
 
     return {
         currentTarget: target,
-        data: tuple[0],
-        sink: tuple[1]
+        handler: handler
     }
 }

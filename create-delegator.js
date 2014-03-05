@@ -1,6 +1,6 @@
 var uuid = require("uuid")
 
-var listen = require("./listen.js")
+var defaultListen = require("./listen.js")
 
 module.exports = createDelegator
 
@@ -16,6 +16,7 @@ function createDelegator(surface) {
         target = target || surface.defaultTarget
         opts = opts || {}
 
+        var listen = opts.listen || surface.listen || defaultListen
         var delegator = {
             id: opts.id || uuid(),
             target: target,

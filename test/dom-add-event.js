@@ -9,6 +9,23 @@ var EventSinks = require("event-sinks/geval")
 var Delegator = require("../index.js")
 var addEvent = require("../add-event.js")
 
+function SinkHandler(sink, data) {
+    this.sink = sink
+    this.data = data
+}
+
+SinkHandler.prototype.handleEvent = function handleEvent(ev) {
+    this.sink.write({
+        value: this.data,
+        ev: null
+    })
+}
+
+function addSinkEvent(elem, eventName, sink, data) {
+    return addEvent(sink.id, elem, eventName,
+        new SinkHandler(sink, data))
+}
+
 function createEvent(type, attrs) {
     attrs = attrs || {}
     attrs.bubbles = true
@@ -30,7 +47,7 @@ test("can listen to events", function (assert) {
     var called = 0
     var id = uuid()
 
-    addEvent(elem, "click", events.sinks.foo, {
+    addSinkEvent(elem, "click", events.sinks.foo, {
         id: id
     })
 
@@ -67,11 +84,11 @@ test("can set different data on same sink", function (assert) {
     var foo = events.sinks.foo
     var tuples = []
 
-    addEvent(elem.querySelector(".bar"), "click", foo, {
+    addSinkEvent(elem.querySelector(".bar"), "click", foo, {
         name: "bar"
     })
 
-    addEvent(elem.querySelector(".baz"), "click", foo, {
+    addSinkEvent(elem.querySelector(".baz"), "click", foo, {
         name: "baz"
     })
 
@@ -108,11 +125,11 @@ test("can register multiple sinks", function (assert) {
     var bar = events.sinks.bar, baz = events.sinks.baz
     var hash = {}
 
-    addEvent(elem.querySelector(".bar"), "click", bar, {
+    addSinkEvent(elem.querySelector(".bar"), "click", bar, {
         name: "baz"
     })
 
-    addEvent(elem.querySelector(".baz"), "click", baz, {
+    addSinkEvent(elem.querySelector(".baz"), "click", baz, {
         name: "bar"
     })
 

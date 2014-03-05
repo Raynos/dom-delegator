@@ -12,10 +12,11 @@
 
 Decorate elements with delegated events
 
-`dom-delegator` allows you to attach a `Sink` to a dom element.
+`dom-delegator` allows you to attach an `EventHandler` to 
+  a dom element.
 
 When event of the correct type occurs `dom-delegator` will
-  write your value to the `Sink`.
+  invoke your `EventHandler`
 
 This allows you to seperate your event listeners from your
   event writers. Sprinkle your event writers in the template

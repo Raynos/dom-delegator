@@ -12,6 +12,7 @@ function listen(surface, delegator, eventName) {
             return
         }
 
-        listener.sink.dispatch(listener, ev)
+        ev.currentTarget = listener.currentTarget
+        listener.handler.handleEvent(ev)
     })
 }
