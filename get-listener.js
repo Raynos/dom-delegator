@@ -21,10 +21,10 @@ function getListener(surface, id, target, type) {
             surface.getParent(target), type)
     }
 
-    handler = handler || allHandler
     if (handler && allHandler) {
         handler = multipleEvents(handler, allHandler)
     }
+    handler = handler || allHandler
 
     return new Listener(target, handler)
 }
