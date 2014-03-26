@@ -5,15 +5,16 @@ module.exports = multipleEvents
 function multipleEvents() {
     var handles = parseHandles(arguments)
 
-    return new MultiHandler(handles)
+    return new MultiHandler(handles, handles && handles[0].id)
 }
 
-function MultiHandler(handles) {
+function MultiHandler(handles, id) {
     if (!(this instanceof MultiHandler)) {
         return new MultiHandler(handles)
     }
 
     this.handles = handles
+    this.id = id
 }
 
 MultiHandler.prototype.handleEvent = function (ev) {

@@ -10,8 +10,8 @@ function getListener(surface, id, target, type) {
     }
 
     var ds = DataSet(target)
-    var events = ds[type]
-    var allEvents = ds.event
+    var events = parseHandlerWithId(ds[type])
+    var allEvents = parseHandlerWithId(ds.event)
 
     var handler = events && events[id]
     var allHandler = allEvents && allEvents[id]
@@ -40,4 +40,16 @@ function EventHandler(fn) {
 function Listener(target, handler) {
     this.currentTarget = target
     this.handler = handler
+}
+
+function parseHandlerWithId(events) {
+    var result
+    if (events && events.id) {
+        result = {}
+        result[events.id] = events
+    } else {
+        result = events
+    }
+
+    return result
 }
