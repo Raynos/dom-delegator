@@ -1,32 +1,22 @@
-var getField = require("./symbol/get-field.js")
-var setField = require("./symbol/set-field.js")
+var DataSet = require("data-set")
+
+var multipleEvents = require("./multiple-events.js")
 
 module.exports = addEvent
 
 function addEvent(id, target, type, fn) {
-    var events = getField(target, id)
 
-    var handler = typeof fn === "function" ?
-        { handleEvent: fn } : fn
-    var currentHandler = events[type]
+    var ds = DataSet(target)
+    var events = ds[type] || {}
+    var handler = fn
+
+    var currentHandler = events[id]
 
     if (currentHandler) {
-        events[type] = new MultiHandler(currentHandler, handler)
+        events[id] = multipleEvents(currentHandler, handler)
     } else {
-        events[type] = handler
+        events[id] = handler
     }
 
-    setField(target, id, events)
-}
-
-function MultiHandler(multi, handler) {
-    var handles = multi.handles || [multi]
-
-    this.handles = handles.concat([handler])
-}
-
-MultiHandler.prototype.handleEvent = function (ev) {
-    this.handles.forEach(function (handler) {
-        handler.handleEvent(ev)
-    })
+    ds[type] = events
 }

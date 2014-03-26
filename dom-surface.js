@@ -11,7 +11,7 @@ var allEvents = [
 
 module.exports = {
     is: isSurface,
-    defaultTarget: document,
+    defaultTarget: document.documentElement,
     allEvents: allEvents,
     addListener: addListener,
     getParent: getParent,

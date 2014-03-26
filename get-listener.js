@@ -1,4 +1,6 @@
-var getField = require("./symbol/get-field.js")
+var DataSet = require("data-set")
+
+var multipleEvents = require("./multiple-events.js")
 
 module.exports = getListener
 
@@ -7,16 +9,27 @@ function getListener(surface, id, target, type) {
         return null
     }
 
-    var events = getField(target, id)
-    var handler = events && events[type]
+    var ds = DataSet(target)
+    var events = ds[type]
+    var allEvents = ds.event
 
-    if (!handler) {
+    var handler = events && events[id]
+    var allHandler = allEvents && allEvents[id]
+
+    if (!handler && !allHandler) {
         return getListener(surface, id,
             surface.getParent(target), type)
     }
 
-    return {
-        currentTarget: target,
-        handler: handler
+    handler = handler || allHandler
+    if (handler && allHandler) {
+        handler = multipleEvents(handler, allHandler)
     }
+
+    return new Listener(target, handler)
+}
+
+function Listener(target, handler) {
+    this.currentTarget = target
+    this.handler = handler
 }

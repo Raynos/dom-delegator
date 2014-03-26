@@ -17,15 +17,16 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "global": "~2.0.7",
-    "uuid": "~1.4.1"
+    "cuid": "^1.2.1",
+    "data-set": "^3.0.0",
+    "event-sinks": "^1.0.1",
+    "global": "^3.0.0"
   },
   "devDependencies": {
-    "tape": "~2.4.2",
-    "hyperscript": "~1.4.0",
-    "synthetic-dom-events": "~0.1.1",
-    "testling": "~1.6.0",
-    "event-sinks": "~1.0.1"
+    "event-sinks": "~1.0.1",
+    "istanbul": "^0.2.6",
+    "synthetic-dom-events": "git://github.com/Raynos/synthetic-dom-events",
+    "tape": "^2.12.0"
   },
   "licenses": [
     {
@@ -34,14 +35,9 @@
     }
   ],
   "scripts": {
-    "test": "node ./test/index.js",
-    "start": "node ./index.js",
-    "watch": "nodemon -w ./index.js index.js",
-    "travis-test": "istanbul cover ./test/index.js && ((cat coverage/lcov.info | coveralls) || exit 0)",
-    "cover": "istanbul cover --report none --print detail ./test/index.js",
-    "view-cover": "istanbul report html && google-chrome ./coverage/index.html",
-    "test-browser": "testem-browser ./test/browser/index.js",
-    "testem": "testem-both -b=./test/browser/index.js"
+    "test": "node ./test/index.js | tap-spec",
+    "cover": "istanbul cover --print detail ./test/index.js",
+    "view-cover": "istanbul report html && google-chrome ./coverage/index.html"
   },
   "testling": {
     "files": "test/index.js",

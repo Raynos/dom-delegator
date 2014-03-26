@@ -1,4 +1,4 @@
-var uuid = require("uuid")
+var cuid = require("cuid")
 
 var defaultListen = require("./listen.js")
 
@@ -18,7 +18,7 @@ function createDelegator(surface) {
 
         var listen = opts.listen || surface.listen || defaultListen
         var delegator = {
-            id: opts.id || uuid(),
+            id: opts.id || cuid(),
             target: target,
             listenTo: listenTo
         }
