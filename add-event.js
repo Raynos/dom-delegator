@@ -14,8 +14,13 @@ function addEvent(id, target, type, fn) {
     if (currentHandler) {
         events[id] = multipleEvents(currentHandler, handler)
     } else {
-        events[id] = handler
+        events[id] = typeof handler === "function" ?
+            new EventHandler(handler) : handler
     }
 
     ds[type] = events
+}
+
+function EventHandler(fn) {
+    this.handleEvent = fn
 }
