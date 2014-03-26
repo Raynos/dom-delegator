@@ -30,3 +30,29 @@ test("delegator with no args", function (assert) {
         assert.end()
     })
 })
+
+test("delegator with no args", function (assert) {
+    var elem = h("div")
+    document.body.appendChild(elem)
+
+    var d = Delegator({
+        defaultEvents: false
+    })
+    d.listenTo("click")
+    var values = []
+    
+    addEvent(d.id, elem, "click", function (ev) {
+        values.push(ev)
+    })
+
+    var ev = createEvent("click")
+    elem.dispatchEvent(ev)
+
+    setImmediate(function () {
+        assert.equal(values.length, 1)
+        assert.equal(values[0].target, elem)
+
+        document.body.removeChild(elem)
+        assert.end()
+    })
+})
