@@ -34,3 +34,29 @@ test("adding multiple listeners", function (assert) {
         assert.end()
     })
 })
+
+test("add multiple listeners of different types", function (assert) {
+    var elem = h("div")
+    document.body.appendChild(elem)
+
+    var d = Delegator(elem)
+    var values = []
+    var sink = Sink(d.id, function (value) {
+        values.push(value)
+    })
+
+    addSinkEvent(elem, "event", sink, { key: "foo" })
+    addSinkEvent(elem, "click", sink, { key: "bar" })
+
+    var ev = createEvent("click")
+    elem.dispatchEvent(ev)
+
+    setImmediate(function () {
+        assert.equal(values.length, 2)
+        assert.equal(values[0].key, "bar")
+        assert.equal(values[1].key, "foo")
+
+        document.body.removeChild(elem)
+        assert.end()
+    })
+})

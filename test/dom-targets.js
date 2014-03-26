@@ -19,7 +19,6 @@ test("dispatched events have correct targets", function (assert) {
         values.push(ev)
     })
 
-
     var ev = createEvent("click")
     elem.childNodes[0].dispatchEvent(ev)
 
