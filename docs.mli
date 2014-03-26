@@ -1,27 +1,20 @@
-type Sink = require('event-sinks').Sink
-
 type Target := DOMNode
 
-type Surface := {
+type Surface<Target> := {
     is: (target: Any) => Boolean,
     defaultTarget: Target,
     allEvents: Array<String>,
     addListener: (Target, eventName: String, Function) => void,
     getListener: (
         Surface, id: String, Target, type: String
-    ) => null | Listener<T>
-}
-
-type DelegatorEvent<T> := {
-    value: T,
-    ev: null | {
-        currentValue: Object
-    }
+    ) => null | Listener<T>,
+    getParent: (Target) => Target
 }
 
 type Delegator<Target> := {
     id: String
-    target: Target
+    target: Target,
+    listenTo: (eventName: String) => void
 }
 
 type CreateDelegator<Target> := (
@@ -32,34 +25,36 @@ type CreateDelegator<Target> := (
     }
 ) => Delegator<Target>
 
-type Listener<T> := {
+type Listener<Target> := {
     currentTarget: Target,
-    data: T,
-    sink: Sink & {
-        dispatch: EventDispatcher
-    }
+    handler: Function
 }
 
-type EventDispatcher<T> := (Listener<T>, DOMEvent) => void
-
-type GetListener := 
+type EventHandler := Function | {
+    handleEvent: Function
+}
 
 dom-delegator := CreateDelegator<Target>
 
 dom-delegator/add-event := (
+    id: String,
     target: Target,
     type: String,
-    sink: Sink,
-    data: Any
+    fn: EventHandler
 )
 
 dom-delegator/create-delegator :=
     (Surface) => CreateDelegator<Target>
 
+dom-delegator/create-property :=
+    (id: String, Function) => Object<id: String, Function>
+
 dom-delegator/dom-surface := Surface
 
 dom-delegator/get-listener := (
     Surface, id: String, Target, type: String
-) => null | Listener<T>
+) => null | Listener<Target>
 
 dom-delegator/listen := (Surface, Delegator, eventName: String) => void
+
+dom-delegator/multiple-events := (EventHandler...) => EventHandler

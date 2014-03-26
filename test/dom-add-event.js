@@ -1,6 +1,5 @@
 var test = require("tape")
-var h = require("hyperscript")
-var uuid = require("uuid")
+var cuid = require("cuid")
 var DOMEvent = require("synthetic-dom-events")
 var setImmediate = require("timers").setImmediate
 var document = require("global/document")
@@ -9,16 +8,23 @@ var EventSinks = require("event-sinks/geval")
 var Delegator = require("../index.js")
 var addEvent = require("../add-event.js")
 
+function h(tagName, children) {
+    var elem = document.createElement(tagName)
+    if (children) {
+        children.forEach(function (child) {
+            elem.appendChild(child)
+        })
+    }
+    return elem
+}
+
 function SinkHandler(sink, data) {
     this.sink = sink
     this.data = data
 }
 
 SinkHandler.prototype.handleEvent = function handleEvent(ev) {
-    this.sink.write({
-        value: this.data,
-        ev: null
-    })
+    this.sink.write(this.data)
 }
 
 function addSinkEvent(elem, eventName, sink, data) {
@@ -45,20 +51,16 @@ test("can listen to events", function (assert) {
     var d = Delegator(elem)
     var events = EventSinks(d.id, ["foo"])
     var called = 0
-    var id = uuid()
+    var id = cuid()
 
     addSinkEvent(elem, "click", events.sinks.foo, {
         id: id
     })
 
-    events.foo(function (tuple) {
+    events.foo(function (value) {
         called++
 
-        assert.ok("value" in tuple)
-        assert.ok("ev" in tuple)
-
-        assert.equal(tuple.ev, null)
-        assert.equal(tuple.value.id, id)
+        assert.equal(value.id, id)
     })
 
     var ev = createEvent("click")
@@ -82,30 +84,30 @@ test("can set different data on same sink", function (assert) {
     var d = Delegator(elem)
     var events = EventSinks(d.id, ["foo"])
     var foo = events.sinks.foo
-    var tuples = []
+    var values = []
 
-    addSinkEvent(elem.querySelector(".bar"), "click", foo, {
+    addSinkEvent(elem.childNodes[0], "click", foo, {
         name: "bar"
     })
 
-    addSinkEvent(elem.querySelector(".baz"), "click", foo, {
+    addSinkEvent(elem.childNodes[1], "click", foo, {
         name: "baz"
     })
 
-    events.foo(function (tuple) {
-        tuples.push(tuple)
+    events.foo(function (value) {
+        values.push(value)
     })
 
     var ev = createEvent("click")
-    elem.querySelector(".bar").dispatchEvent(ev)
+    elem.childNodes[0].dispatchEvent(ev)
 
     var ev2 = createEvent("click")
-    elem.querySelector(".baz").dispatchEvent(ev2)
+    elem.childNodes[1].dispatchEvent(ev2)
 
     setImmediate(function () {
-        assert.equal(tuples.length, 2)
-        assert.equal(tuples[0].value.name, "bar")
-        assert.equal(tuples[1].value.name, "baz")
+        assert.equal(values.length, 2)
+        assert.equal(values[0].name, "bar")
+        assert.equal(values[1].name, "baz")
 
         document.body.removeChild(elem)
         assert.end()
@@ -125,33 +127,33 @@ test("can register multiple sinks", function (assert) {
     var bar = events.sinks.bar, baz = events.sinks.baz
     var hash = {}
 
-    addSinkEvent(elem.querySelector(".bar"), "click", bar, {
+    addSinkEvent(elem.childNodes[0], "click", bar, {
         name: "baz"
     })
 
-    addSinkEvent(elem.querySelector(".baz"), "click", baz, {
+    addSinkEvent(elem.childNodes[1], "click", baz, {
         name: "bar"
     })
 
-    events.bar(function (tuple) {
-        hash.bar = tuple
+    events.bar(function (value) {
+        hash.bar = value
     })
 
-    events.baz(function (tuple) {
-        hash.baz = tuple
+    events.baz(function (value) {
+        hash.baz = value
     })
 
     var ev = createEvent("click")
-    elem.querySelector(".bar").dispatchEvent(ev)
+    elem.childNodes[0].dispatchEvent(ev)
 
     var ev2 = createEvent("click")
-    elem.querySelector(".baz").dispatchEvent(ev2)
+    elem.childNodes[1].dispatchEvent(ev2)
 
     setImmediate(function () {
         assert.ok("bar" in hash)
         assert.ok("baz" in hash)
-        assert.equal(hash.bar.value.name, "baz")
-        assert.equal(hash.baz.value.name, "bar")
+        assert.equal(hash.bar.name, "baz")
+        assert.equal(hash.baz.name, "bar")
 
         document.body.removeChild(elem)
         assert.end()
