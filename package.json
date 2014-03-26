@@ -21,7 +21,7 @@
     "data-set": "^3.0.0",
     "event-sinks": "^1.0.1",
     "global": "^3.0.0",
-    "xtend": "^2.1.2"
+    "xtend": "^2.2.0"
   },
   "devDependencies": {
     "event-sinks": "~1.0.1",
