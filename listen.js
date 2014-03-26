@@ -1,3 +1,5 @@
+var extend = require("xtend")
+
 module.exports = listen
 
 function listen(surface, delegator, eventName) {
@@ -12,7 +14,8 @@ function listen(surface, delegator, eventName) {
             return
         }
 
-        ev.currentTarget = listener.currentTarget
-        listener.handler.handleEvent(ev)
+        listener.handler.handleEvent(extend(ev, {
+            currentTarget: listener.currentTarget
+        }))
     })
 }

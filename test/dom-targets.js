@@ -31,3 +31,25 @@ test("dispatched events have correct targets", function (assert) {
         assert.end()
     })
 })
+
+test("dispatch event with no handler", function (assert) {
+    var elem = h("div")
+    document.body.appendChild(elem)
+
+    var d = Delegator(elem)
+    var values = []
+    
+    addEvent(d.id, elem, "click", function (ev) {
+        values.push(ev)
+    })
+
+    var ev = createEvent("keypress")
+    elem.dispatchEvent(ev)
+
+    setImmediate(function () {
+        assert.equal(values.length, 0)
+
+        document.body.removeChild(elem)
+        assert.end()
+    })
+})

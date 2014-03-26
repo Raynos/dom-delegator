@@ -26,7 +26,15 @@ function getListener(surface, id, target, type) {
     }
     handler = handler || allHandler
 
+    if (typeof handler === "function") {
+        handler = new EventHandler(handler)
+    }
+
     return new Listener(target, handler)
+}
+
+function EventHandler(fn) {
+    this.handleEvent = fn
 }
 
 function Listener(target, handler) {
