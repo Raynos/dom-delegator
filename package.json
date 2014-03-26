@@ -25,6 +25,7 @@
   "devDependencies": {
     "event-sinks": "~1.0.1",
     "istanbul": "^0.2.6",
+    "run-browser": "git://github.com/Raynos/run-browser",
     "synthetic-dom-events": "git://github.com/Raynos/synthetic-dom-events",
     "tape": "^2.12.0"
   },
@@ -36,6 +37,7 @@
   ],
   "scripts": {
     "test": "node ./test/index.js | tap-spec",
+    "browser": "run-browser ./test/index.js -b | tap-spec",
     "cover": "istanbul cover --print detail ./test/index.js",
     "view-cover": "istanbul report html && google-chrome ./coverage/index.html"
   },

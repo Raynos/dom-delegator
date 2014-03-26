@@ -1,43 +1,14 @@
 var test = require("tape")
 var cuid = require("cuid")
-var DOMEvent = require("synthetic-dom-events")
 var setImmediate = require("timers").setImmediate
 var document = require("global/document")
 var EventSinks = require("event-sinks/geval")
 
+var h = require("./lib/h.js")
+var addSinkEvent = require("./lib/add-sink-event.js")
+var createEvent = require("./lib/create-event.js")
+
 var Delegator = require("../index.js")
-var addEvent = require("../add-event.js")
-
-function h(tagName, children) {
-    var elem = document.createElement(tagName)
-    if (children) {
-        children.forEach(function (child) {
-            elem.appendChild(child)
-        })
-    }
-    return elem
-}
-
-function SinkHandler(sink, data) {
-    this.sink = sink
-    this.data = data
-}
-
-SinkHandler.prototype.handleEvent = function handleEvent(ev) {
-    this.sink.write(this.data)
-}
-
-function addSinkEvent(elem, eventName, sink, data) {
-    return addEvent(sink.id, elem, eventName,
-        new SinkHandler(sink, data))
-}
-
-function createEvent(type, attrs) {
-    attrs = attrs || {}
-    attrs.bubbles = true
-
-    return DOMEvent(type, attrs)
-}
 
 test("Delegator is a function", function (assert) {
     assert.equal(typeof Delegator, "function")
@@ -75,9 +46,9 @@ test("can listen to events", function (assert) {
 })
 
 test("can set different data on same sink", function (assert) {
-    var elem = h(".foo", [
-        h(".bar"),
-        h(".baz")
+    var elem = h("foo", [
+        h("bar"),
+        h("baz")
     ])
     document.body.appendChild(elem)
 
@@ -115,9 +86,9 @@ test("can set different data on same sink", function (assert) {
 })
 
 test("can register multiple sinks", function (assert) {
-    var elem = h(".foo", [
-        h(".bar"),
-        h(".baz")
+    var elem = h("foo", [
+        h("bar"),
+        h("baz")
     ])
     document.body.appendChild(elem)
 
