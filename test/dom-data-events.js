@@ -6,7 +6,6 @@ var DataSet = require("data-set")
 var h = require("./lib/h.js")
 var createEvent = require("./lib/create-event.js")
 
-var createProperty = require("../create-property.js")
 var Delegator = require("../index.js")
 
 test("setting event listeners with data-set directly", function (assert) {
@@ -16,9 +15,11 @@ test("setting event listeners with data-set directly", function (assert) {
     var d = Delegator(elem)
     var values = []
 
-    DataSet(elem).click = createProperty(d.id, function (ev) {
+    var events = {}
+    events[d.id] = function (ev) {
         values.push(ev)
-    })
+    }
+    DataSet(elem).click = events
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)

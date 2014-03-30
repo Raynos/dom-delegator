@@ -1,7 +1,5 @@
 var DataSet = require("data-set")
 
-var multipleEvents = require("./multiple-events.js")
-
 module.exports = getListener
 
 function getListener(surface, id, target, type) {
@@ -10,46 +8,25 @@ function getListener(surface, id, target, type) {
     }
 
     var ds = DataSet(target)
-    var events = parseHandlerWithId(ds[type])
-    var allEvents = parseHandlerWithId(ds.event)
+    var handlers = getHandlers(ds[type] || {}, ds.event || {}, id)
 
-    var handler = events && events[id]
-    var allHandler = allEvents && allEvents[id]
-
-    if (!handler && !allHandler) {
+    if (!handlers) {
         return getListener(surface, id,
             surface.getParent(target), type)
     }
 
-    if (handler && allHandler) {
-        handler = multipleEvents(handler, allHandler)
-    }
-    handler = handler || allHandler
-
-    if (typeof handler === "function") {
-        handler = new EventHandler(handler)
-    }
-
-    return new Listener(target, handler)
+    return new Listener(target, handlers)
 }
 
-function EventHandler(fn) {
-    this.handleEvent = fn
+function getHandlers(events, allEvents, id) {
+    var handler = events.id === id ? events : events[id]
+    var allHandler = allEvents.id === id ? allEvents : allEvents[id]
+
+    return !handler && !allHandler ?
+        null : [].concat(handler || [], allHandler || [])
 }
 
-function Listener(target, handler) {
+function Listener(target, handlers) {
     this.currentTarget = target
-    this.handler = handler
-}
-
-function parseHandlerWithId(events) {
-    var result
-    if (events && events.id) {
-        result = {}
-        result[events.id] = events
-    } else {
-        result = events
-    }
-
-    return result
+    this.handlers = handlers
 }

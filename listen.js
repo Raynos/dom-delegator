@@ -14,8 +14,13 @@ function listen(surface, delegator, eventName) {
             return
         }
 
-        listener.handler.handleEvent(extend(ev, {
+        var arg = extend(ev, {
             currentTarget: listener.currentTarget
-        }))
+        })
+
+        listener.handlers.forEach(function (handler) {
+            typeof handler === "function" ?
+                handler(arg) : handler.handleEvent(arg)
+        })
     })
 }
