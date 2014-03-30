@@ -25,13 +25,13 @@ type CreateDelegator<Target> := (
     }
 ) => Delegator<Target>
 
-type Listener<Target> := {
-    currentTarget: Target,
-    handler: Function
-}
-
 type EventHandler := Function | {
     handleEvent: Function
+}
+
+type Listener<Target> := {
+    currentTarget: Target,
+    handlers: [Function | EventHandler]
 }
 
 dom-delegator := CreateDelegator<Target>
@@ -46,9 +46,6 @@ dom-delegator/add-event := (
 dom-delegator/create-delegator :=
     (Surface) => CreateDelegator<Target>
 
-dom-delegator/create-property :=
-    (id: String, Function) => Object<id: String, Function>
-
 dom-delegator/dom-surface := Surface
 
 dom-delegator/get-listener := (
@@ -56,5 +53,3 @@ dom-delegator/get-listener := (
 ) => null | Listener<Target>
 
 dom-delegator/listen := (Surface, Delegator, eventName: String) => void
-
-dom-delegator/multiple-events := (EventHandler...) => EventHandler

@@ -42,10 +42,11 @@ Also see [`html-delegator`](https://github.com/Raynos/html-delegator)
 var document = require("global/document")
 var Delegator = require("dom-delegator")
 var addEvent = require("dom-delegator/add-event")
-var Sink = require("dom-delegator/sink")
+var EventEmitter = require("events").EventEmitter
 
 var del = Delegator(document.body)
-var textClicked = Sink(del.id, function (value) {
+var emitter = EventEmitter()
+emitter.on('textClicked', function (value) {
     // either 'bar' or 'bar' depends on which 
     // `<div>` was clicked
     console.log("doSomething", value.type)
@@ -55,10 +56,10 @@ var elem = document.querySelector(".foo")
 
 // add individual elems. (in a different file?)
 addEvent(del.id, elem.querySelector(".bar"), "click", function (ev) {
-  textClicked.write({ type: 'bar' })
+  emmitter.emit('textClicked', { type: 'bar' })
 })
 addEvent(del.id, elem.querySelector(".baz"), "click", function (ev) {
-  textClicked.write({ type: 'baz' })
+  emitter.emit('textClicked', { type: 'baz' })
 })
 ```
 

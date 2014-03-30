@@ -1,13 +1,13 @@
 var test = require("tape")
 var setImmediate = require("timers").setImmediate
 var document = require("global/document")
+var Sink = require("event-sinks/sink")
 
 var h = require("./lib/h.js")
 var addSinkEvent = require("./lib/add-sink-event.js")
 var createEvent = require("./lib/create-event.js")
 
 var Delegator = require("../index.js")
-var Sink = require("../sink.js")
 
 test("adding multiple listeners", function (assert) {
     var elem = h("div")
@@ -15,7 +15,7 @@ test("adding multiple listeners", function (assert) {
 
     var d = Delegator(elem)
     var values = []
-    var sink = Sink(d.id, function (value) {
+    var sink = Sink(d.id, "", function (value) {
         values.push(value)
     })
 
@@ -41,7 +41,7 @@ test("add multiple listeners of different types", function (assert) {
 
     var d = Delegator(elem)
     var values = []
-    var sink = Sink(d.id, function (value) {
+    var sink = Sink(d.id, "", function (value) {
         values.push(value)
     })
 
