@@ -27,7 +27,7 @@
     "istanbul": "^0.2.6",
     "pre-commit": "0.0.4",
     "run-browser": "git://github.com/Raynos/run-browser",
-    "synthetic-dom-events": "git://github.com/Raynos/synthetic-dom-events",
+    "synthetic-dom-events": "^0.2.0",
     "tape": "^2.12.0"
   },
   "licenses": [
