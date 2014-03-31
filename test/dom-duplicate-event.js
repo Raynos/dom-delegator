@@ -1,25 +1,26 @@
 var test = require("tape")
 var setImmediate = require("timers").setImmediate
 var document = require("global/document")
-var DataSet = require("data-set")
 
 var h = require("./lib/h.js")
 var createEvent = require("./lib/create-event.js")
 
+var addEvent = require("../add-event.js")
 var Delegator = require("../index.js")
 
-test("setting event listeners with data-set directly", function (assert) {
+test("adding same function twice", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
-    var d = Delegator(elem)
+    var d = Delegator()
     var values = []
 
-    var events = {}
-    events[d.id] = function (ev) {
+    var fn = function (ev) {
         values.push(ev)
     }
-    DataSet(elem).click = events
+    
+    addEvent(d.id, elem, "click", fn)
+    addEvent(d.id, elem, "click", fn)
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)
@@ -33,29 +34,21 @@ test("setting event listeners with data-set directly", function (assert) {
     })
 })
 
-test("setting an id'd event handler", function (assert) {
+test("adding same event handler twice", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
-    var d = Delegator(elem)
+    var d = Delegator()
     var values = []
-    var eventValues = []
 
     var handler = {
         handleEvent: function (ev) {
             values.push(ev)
-        },
-        id: d.id
+        }
     }
-    var eventHandler = {
-        handleEvent: function (ev) {
-            eventValues.push(ev)
-        },
-        id: d.id
-    }
-
-    DataSet(elem).click = handler
-    DataSet(elem).event = eventHandler
+    
+    addEvent(d.id, elem, "click", handler)
+    addEvent(d.id, elem, "click", handler)
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)
@@ -64,12 +57,7 @@ test("setting an id'd event handler", function (assert) {
         assert.equal(values.length, 1)
         assert.equal(values[0].target, elem)
 
-        assert.equal(eventValues.length, 1)
-        assert.equal(eventValues[0].target, elem)
-        assert.equal(eventValues[0].type, "click")
-
         document.body.removeChild(elem)
         assert.end()
     })
 })
-
