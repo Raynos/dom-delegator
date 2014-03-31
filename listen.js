@@ -1,14 +1,13 @@
 var extend = require("xtend")
 
+var getListener = require("./get-listener.js")
+
 module.exports = listen
 
-function listen(surface, delegator, eventName) {
-    var target = delegator.target
-    var id = delegator.id
-    var getListener = surface.getListener
-
-    surface.addListener(target, eventName, function (ev) {
-        var listener = getListener(surface, id, ev.target, eventName)
+function listen(delegator, surface, eventName) {
+    surface.addListener(delegator.target, eventName, function (ev) {
+        var listener = getListener(surface, delegator.id,
+            ev.target, eventName)
 
         if (!listener) {
             return

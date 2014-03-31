@@ -1,6 +1,6 @@
 var cuid = require("cuid")
 
-var defaultListen = require("./listen.js")
+var listen = require("./listen.js")
 
 module.exports = createDelegator
 
@@ -16,7 +16,6 @@ function createDelegator(surface) {
         target = target || surface.defaultTarget
         opts = opts || {}
 
-        var listen = opts.listen || surface.listen || defaultListen
         var delegator = {
             id: opts.id || cuid(),
             target: target,
@@ -25,14 +24,14 @@ function createDelegator(surface) {
 
         if (opts.defaultEvents !== false) {
             surface.allEvents.forEach(function (eventName) {
-                listen(surface, delegator, eventName)
+                listen(delegator, surface, eventName)
             })
         }
 
         return delegator
 
         function listenTo(eventName) {
-            listen(surface, delegator, eventName)
+            listen(delegator, surface, eventName)
         }
     }
 }

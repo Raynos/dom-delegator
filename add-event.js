@@ -5,12 +5,10 @@ module.exports = addEvent
 function addEvent(id, target, type, handler) {
     var ds = DataSet(target)
     var events = ds[type] || {}
+    events[id] = (events[id] || [])
 
-    if (!events[id]) {
-        events[id] = []
+    if (events[id].indexOf(handler) === -1) {
+        events[id].push(handler)
     }
-
-    events[id] = events[id].concat([handler])
     ds[type] = events
 }
-

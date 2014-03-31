@@ -19,13 +19,13 @@
   "dependencies": {
     "cuid": "^1.2.1",
     "data-set": "^3.0.0",
-    "event-sinks": "^1.0.1",
     "global": "^3.0.0",
     "xtend": "^2.2.0"
   },
   "devDependencies": {
     "event-sinks": "~1.0.1",
     "istanbul": "^0.2.6",
+    "pre-commit": "0.0.4",
     "run-browser": "git://github.com/Raynos/run-browser",
     "synthetic-dom-events": "git://github.com/Raynos/synthetic-dom-events",
     "tape": "^2.12.0"

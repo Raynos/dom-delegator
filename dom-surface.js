@@ -1,7 +1,5 @@
 var document = require("global/document")
 
-var getListener = require("./get-listener.js")
-
 var allEvents = [
     "blur", "focus", "focusin", "focusout", "load", "resize",
     "scroll", "unload", "click", "dblclick", "mousedown",
@@ -14,8 +12,7 @@ module.exports = {
     defaultTarget: document.documentElement,
     allEvents: allEvents,
     addListener: addListener,
-    getParent: getParent,
-    getListener: getListener
+    getParent: getParent
 }
 
 function addListener(target, eventName, listener) {
