@@ -5,9 +5,6 @@ type Surface<Target> := {
     defaultTarget: Target,
     allEvents: Array<String>,
     addListener: (Target, eventName: String, Function) => void,
-    getListener: (
-        Surface, id: String, Target, type: String
-    ) => null | Listener<T>,
     getParent: (Target) => Target
 }
 
@@ -52,4 +49,4 @@ dom-delegator/get-listener := (
     Surface, id: String, Target, type: String
 ) => null | Listener<Target>
 
-dom-delegator/listen := (Surface, Delegator, eventName: String) => void
+dom-delegator/listen := (Delegator, Surface, eventName: String) => void
