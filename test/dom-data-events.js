@@ -100,3 +100,44 @@ test("setting data-event to array", function (assert) {
         assert.end()
     })
 })
+
+test("data-event to array of id'd handlers", function (assert) {
+    var elem = h("div")
+    document.body.appendChild(elem)
+
+    var d = Delegator(elem)
+    var changes = []
+    var submits = []
+
+    var submitHandler = {
+        handleEvent: function (ev) {
+            submits.push(ev)
+        },
+        id: d.id
+    }
+    var changeHandler = {
+        handleEvent: function (ev) {
+            changes.push(ev)
+        },
+        id: d.id
+    }
+
+    DataSet(elem).event = [submitHandler, changeHandler]
+
+    var ev = createEvent("click")
+    elem.dispatchEvent(ev)
+
+    setImmediate(function () {
+        assert.equal(submits.length, 1)
+        assert.equal(changes.length, 1)
+
+        assert.equal(submits[0], changes[0])
+        assert.equal(submits[0].target, elem)
+
+        document.body.removeChild(elem)
+        assert.end()
+    })
+
+
+
+})

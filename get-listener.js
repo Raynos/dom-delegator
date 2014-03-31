@@ -10,8 +10,7 @@ function getListener(surface, id, target, type) {
 
     var ds = DataSet(target)
     // fetch list of handler fns for this event
-    var handlers = getHandlers(ds[type] || {}, ds.event || {}, id)
-
+    var handlers = getHandlers(ds[type], ds.event, id)
     if (!handlers) {
         return getListener(surface, id,
             surface.getParent(target), type)
@@ -21,14 +20,25 @@ function getListener(surface, id, target, type) {
 }
 
 function getHandlers(events, allEvents, id) {
-    // support { handleEvent: Function, id: String }
-    // and Object<id: String, Function | { handleEvent: Function }>
-    var handler = events.id === id ? events : events[id]
-    var allHandler = allEvents.id === id ? allEvents : allEvents[id]
+    var handler = parseHandler(events || {}, id)
+    var allHandler = parseHandler(allEvents || {}, id)
 
     // return null if nothing else flatten into one array
     return !handler && !allHandler ?
         null : [].concat(handler || [], allHandler || [])
+}
+
+// support { handleEvent: Function, id: String }
+// and Array<{ handleEvent: Function, id: String }
+// and Object<id: String, Function | { handleEvent: Function }>
+function parseHandler(hash, id) {
+    if (hash.id === id) {
+        return hash
+    } else if (Array.isArray(hash)) {
+        return hash.filter(function (ev) { return ev.id === id })
+    } else {
+        return hash[id]
+    }
 }
 
 function Listener(target, handlers) {
