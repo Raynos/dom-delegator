@@ -25,7 +25,7 @@
   "devDependencies": {
     "event-sinks": "~1.0.1",
     "istanbul": "^0.2.6",
-    "pre-commit": "0.0.4",
+    "pre-commit": "0.0.5",
     "run-browser": "git://github.com/Raynos/run-browser",
     "synthetic-dom-events": "^0.2.0",
     "tape": "^2.12.0"

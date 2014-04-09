@@ -1,4 +1,4 @@
-var extend = require("xtend")
+var extend = require("xtend/mutable")
 
 var getListener = require("./get-listener.js")
 
@@ -13,13 +13,21 @@ function listen(delegator, surface, eventName) {
             return
         }
 
-        var arg = extend(ev, {
-            currentTarget: listener.currentTarget
-        })
+        var arg = new ProxyEvent(ev, listener)
 
         listener.handlers.forEach(function (handler) {
             typeof handler === "function" ?
                 handler(arg) : handler.handleEvent(arg)
         })
     })
+}
+
+function ProxyEvent(ev, listener) {
+    this._rawEvent = ev
+    extend(this, ev)
+    this.currentTarget = listener.currentTarget
+}
+
+ProxyEvent.prototype.preventDefault = function () {
+    this._rawEvent.preventDefault()
 }
