@@ -2,7 +2,7 @@ var DataSet = require("data-set")
 
 module.exports = getListener
 
-function getListener(surface, target, type) {
+function getListener(target, type) {
     // terminate recursion if parent is `null`
     if (target === null) {
         return null
@@ -10,36 +10,15 @@ function getListener(surface, target, type) {
 
     var ds = DataSet(target)
     // fetch list of handler fns for this event
-    var handlers = getHandlers(ds[type], ds.event)
-    if (!handlers) {
-        return getListener(surface, surface.getParent(target), type)
+    var handler = ds[type]
+    var allHandler = ds.event
+
+    if (!handler && !allHandler) {
+        return getListener(target.parentNode, type)
     }
 
+    var handlers = [].concat(handler || [], allHandler || [])
     return new Listener(target, handlers)
-}
-
-function getHandlers(handler, allHandler) {
-    var result = null
-
-    if (handler) {
-        result = result || []
-        if (Array.isArray(handler)) {
-            result.push.apply(result, handler)
-        } else {
-            result.push(handler)
-        }
-    }
-
-    if (allHandler) {
-        result = result || []
-        if (Array.isArray(allHandler)) {
-            result.push.apply(result, allHandler)
-        } else {
-            result.push(allHandler)
-        }
-    }
-
-    return result
 }
 
 function Listener(target, handlers) {
