@@ -6,8 +6,7 @@ module.exports = listen
 
 function listen(delegator, surface, eventName) {
     surface.addListener(delegator.target, eventName, function (ev) {
-        var listener = getListener(surface, delegator.id,
-            ev.target, eventName)
+        var listener = getListener(surface, ev.target, eventName)
 
         if (!listener) {
             return

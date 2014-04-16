@@ -12,10 +12,10 @@ test("dispatched events have correct targets", function (assert) {
     var elem = h("div", [ h("div") ])
     document.body.appendChild(elem)
 
-    var d = Delegator(elem)
+    Delegator()
     var values = []
     
-    addEvent(d.id, elem, "click", function (ev) {
+    addEvent(elem, "click", function (ev) {
         values.push(ev)
     })
 
@@ -36,10 +36,10 @@ test("dispatch event with no handler", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
-    var d = Delegator(elem)
+    Delegator()
     var values = []
     
-    addEvent(d.id, elem, "click", function (ev) {
+    addEvent(elem, "click", function (ev) {
         values.push(ev)
     })
 

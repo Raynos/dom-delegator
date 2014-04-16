@@ -12,10 +12,10 @@ test("delegator with no args", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
-    var d = Delegator()
+    Delegator()
     var values = []
     
-    addEvent(d.id, elem, "click", function (ev) {
+    addEvent(elem, "click", function (ev) {
         values.push(ev)
     })
 
@@ -64,7 +64,7 @@ test("delegator with no args", function (assert) {
     d.listenTo("click")
     var values = []
     
-    addEvent(d.id, elem, "click", function (ev) {
+    addEvent(elem, "click", function (ev) {
         values.push(ev)
     })
 

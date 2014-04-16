@@ -2,13 +2,17 @@ var DataSet = require("data-set")
 
 module.exports = addEvent
 
-function addEvent(id, target, type, handler) {
+function addEvent(target, type, handler) {
     var ds = DataSet(target)
-    var events = ds[type] || {}
-    events[id] = (events[id] || [])
+    var events = ds[type]
 
-    if (events[id].indexOf(handler) === -1) {
-        events[id].push(handler)
+    if (!events) {
+        ds[type] = handler
+    } else if (Array.isArray(events)) {
+        if (events.indexOf(handler) === -1) {
+            events.push(handler)
+        }
+    } else if (events !== handler) {
+        ds[type] = [events, handler]
     }
-    ds[type] = events
 }

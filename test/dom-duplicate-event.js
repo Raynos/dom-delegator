@@ -12,22 +12,22 @@ test("adding same function twice", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
-    var d = Delegator()
+    Delegator()
     var values = []
 
     var fn = function (ev) {
         values.push(ev)
     }
     
-    addEvent(d.id, elem, "click", fn)
-    addEvent(d.id, elem, "click", fn)
+    addEvent(elem, "click", fn)
+    addEvent(elem, "click", fn)
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)
 
     setImmediate(function () {
         assert.equal(values.length, 1)
-        assert.equal(values[0].target, elem)
+        assert.equal(values[0] && values[0].target, elem)
 
         document.body.removeChild(elem)
         assert.end()
@@ -38,7 +38,7 @@ test("adding same event handler twice", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
-    var d = Delegator()
+    Delegator()
     var values = []
 
     var handler = {
@@ -47,15 +47,15 @@ test("adding same event handler twice", function (assert) {
         }
     }
     
-    addEvent(d.id, elem, "click", handler)
-    addEvent(d.id, elem, "click", handler)
+    addEvent(elem, "click", handler)
+    addEvent(elem, "click", handler)
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)
 
     setImmediate(function () {
         assert.equal(values.length, 1)
-        assert.equal(values[0].target, elem)
+        assert.equal(values[0] && values[0].target, elem)
 
         document.body.removeChild(elem)
         assert.end()

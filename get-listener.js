@@ -2,7 +2,7 @@ var DataSet = require("data-set")
 
 module.exports = getListener
 
-function getListener(surface, id, target, type) {
+function getListener(surface, target, type) {
     // terminate recursion if parent is `null`
     if (target === null) {
         return null
@@ -10,35 +10,36 @@ function getListener(surface, id, target, type) {
 
     var ds = DataSet(target)
     // fetch list of handler fns for this event
-    var handlers = getHandlers(ds[type], ds.event, id)
+    var handlers = getHandlers(ds[type], ds.event)
     if (!handlers) {
-        return getListener(surface, id,
-            surface.getParent(target), type)
+        return getListener(surface, surface.getParent(target), type)
     }
 
     return new Listener(target, handlers)
 }
 
-function getHandlers(events, allEvents, id) {
-    var handler = parseHandler(events || {}, id)
-    var allHandler = parseHandler(allEvents || {}, id)
+function getHandlers(handler, allHandler) {
+    var result = null
 
-    // return null if nothing else flatten into one array
-    return !handler && !allHandler ?
-        null : [].concat(handler || [], allHandler || [])
-}
-
-// support { handleEvent: Function, id: String }
-// and Array<{ handleEvent: Function, id: String }
-// and Object<id: String, Function | { handleEvent: Function }>
-function parseHandler(hash, id) {
-    if (hash.id === id) {
-        return hash
-    } else if (Array.isArray(hash)) {
-        return hash.filter(function (ev) { return ev.id === id })
-    } else {
-        return hash[id]
+    if (handler) {
+        result = result || []
+        if (Array.isArray(handler)) {
+            result.push.apply(result, handler)
+        } else {
+            result.push(handler)
+        }
     }
+
+    if (allHandler) {
+        result = result || []
+        if (Array.isArray(allHandler)) {
+            result.push.apply(result, allHandler)
+        } else {
+            result.push(allHandler)
+        }
+    }
+
+    return result
 }
 
 function Listener(target, handlers) {

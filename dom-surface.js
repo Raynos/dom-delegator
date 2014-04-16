@@ -12,7 +12,8 @@ module.exports = {
     defaultTarget: document.documentElement,
     allEvents: allEvents,
     addListener: addListener,
-    getParent: getParent
+    getParent: getParent,
+    name: "DOMSurface"
 }
 
 function addListener(target, eventName, listener) {

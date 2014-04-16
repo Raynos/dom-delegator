@@ -1,43 +1,49 @@
-var cuid = require("cuid")
+var Individual = require("individual")
 
 var addEvent = require("./add-event.js")
 var listen = require("./listen.js")
+
+var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@7", {})
 
 module.exports = createDelegator
 
 function createDelegator(surface) {
     return Delegator
 
-    function Delegator(target, opts) {
-        if (!surface.is(target)) {
-            opts = target
-            target = null
-        }
-        
-        target = target || surface.defaultTarget
+    function Delegator(opts) {
         opts = opts || {}
+        var delegator = delegatorCache[surface.name]
 
-        var delegator = {
-            id: opts.id || cuid(),
-            target: target,
-            listenTo: listenTo,
-            addEventListener: addEventListener
+        if (!delegator) {
+            delegator = delegatorCache[surface.name] =
+                new DOMDelegator(surface)
         }
 
         if (opts.defaultEvents !== false) {
             surface.allEvents.forEach(function (eventName) {
-                listen(delegator, surface, eventName)
+                delegator.listenTo(eventName)
             })
         }
 
         return delegator
-
-        function addEventListener(target, type, handler) {
-            addEvent(delegator.id, target, type, handler)
-        }
-
-        function listenTo(eventName) {
-            listen(delegator, surface, eventName)
-        }
     }
+}
+
+function DOMDelegator(surface) {
+    this.target = surface.defaultTarget
+    this.surface = surface
+    this.events = {}
+}
+
+DOMDelegator.prototype.addEventListener = addEvent
+
+DOMDelegator.prototype.listenTo = listenTo
+
+function listenTo(eventName) {
+    if (this.events[eventName]) {
+        return
+    }
+
+    this.events[eventName] = true
+    listen(this, this.surface, eventName)
 }

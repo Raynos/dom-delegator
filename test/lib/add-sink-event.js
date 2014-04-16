@@ -4,6 +4,6 @@ var SinkHandler = require("./sink-handler.js")
 module.exports = addSinkEvent
 
 function addSinkEvent(elem, eventName, sink, data) {
-    return addEvent(sink.id, elem, eventName,
+    return addEvent(elem, eventName,
         new SinkHandler(sink, data))
 }
