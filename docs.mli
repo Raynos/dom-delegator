@@ -1,52 +1,31 @@
-type Target := DOMNode
+type DOMNode := DOMNode
 
-type Surface<Target> := {
-    is: (target: Any) => Boolean,
-    defaultTarget: Target,
-    allEvents: Array<String>,
-    addListener: (Target, eventName: String, Function) => void,
-    getParent: (Target) => Target
+type Delegator := {
+    target: DOMNode,
+    listenTo: (eventName: String) => void,
+    addEventListener: (DOMNode, String, EventHandler)
 }
-
-type Delegator<Target> := {
-    id: String
-    target: Target,
-    listenTo: (eventName: String) => void
-}
-
-type CreateDelegator<Target> := (
-    target?: Target,
-    opts?: {
-        id: String,
-        defaultEvents?: Boolean
-    }
-) => Delegator<Target>
 
 type EventHandler := Function | {
     handleEvent: Function
 }
 
-type Listener<Target> := {
-    currentTarget: Target,
+type Listener := {
+    currentTarget: DOMNode,
     handlers: [Function | EventHandler]
 }
 
-dom-delegator := CreateDelegator<Target>
+dom-delegator := (opts?: {
+    defaultEvents?: Boolean
+}) => Delegator
 
 dom-delegator/add-event := (
-    id: String,
-    target: Target,
+    target: DOMNode,
     type: String,
     fn: EventHandler
-)
+) => void
 
-dom-delegator/create-delegator :=
-    (Surface) => CreateDelegator<Target>
+dom-delegator/get-listener := (DOMNode, type: String ) 
+    => null | Listener
 
-dom-delegator/dom-surface := Surface
-
-dom-delegator/get-listener := (
-    Surface, id: String, Target, type: String
-) => null | Listener<Target>
-
-dom-delegator/listen := (Delegator, Surface, eventName: String) => void
+dom-delegator/listen := (Delegator, eventName: String) => void

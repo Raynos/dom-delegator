@@ -43,7 +43,7 @@ var document = require("global/document")
 var Delegator = require("dom-delegator")
 var EventEmitter = require("events").EventEmitter
 
-var del = Delegator(document.body)
+var del = Delegator()
 var emitter = EventEmitter()
 emitter.on('textClicked', function (value) {
     // either 'bar' or 'bar' depends on which 
