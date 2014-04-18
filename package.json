@@ -20,6 +20,7 @@
     "data-set": "^3.0.0",
     "global": "^3.0.0",
     "individual": "^0.1.1",
+    "inherits": "^2.0.1",
     "xtend": "^2.2.0"
   },
   "devDependencies": {

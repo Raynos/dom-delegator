@@ -1,5 +1,4 @@
-var extend = require("xtend/mutable")
-
+var ProxyEvent = require("./proxy-event.js")
 var getListener = require("./get-listener.js")
 
 module.exports = listen
@@ -20,12 +19,3 @@ function listen(delegator, eventName) {
     }, true)
 }
 
-function ProxyEvent(ev, listener) {
-    this._rawEvent = ev
-    extend(this, ev)
-    this.currentTarget = listener.currentTarget
-}
-
-ProxyEvent.prototype.preventDefault = function () {
-    this._rawEvent.preventDefault()
-}
