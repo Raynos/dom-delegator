@@ -7,7 +7,7 @@ var listen = require("./listen.js")
 var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@7", {})
 var allEvents = [
     "blur", "change", "click",  "contextmenu", "dblclick",
-    "error","focus", "focusin", "focusout", "keydown",
+    "error","focus", "focusin", "focusout", "input", "keydown",
     "keypress", "keyup", "load", "mousedown", "mouseup",
     "resize", "scroll", "select", "submit", "unload",
 ]
