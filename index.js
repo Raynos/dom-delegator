@@ -3,7 +3,7 @@ var Individual = require("individual")
 var DOMDelegator = require("./dom-delegator.js")
 
 var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@7", {})
-var allEvents = [
+var commonEvents = [
     "blur", "change", "click",  "contextmenu", "dblclick",
     "error","focus", "focusin", "focusout", "input", "keydown",
     "keypress", "keyup", "load", "mousedown", "mouseup",
@@ -31,8 +31,8 @@ function Delegator(opts) {
     }
 
     if (opts.defaultEvents !== false) {
-        for (var i = 0; i < allEvents.length; i++) {
-            delegator.listenTo(allEvents[i])
+        for (var i = 0; i < commonEvents.length; i++) {
+            delegator.listenTo(commonEvents[i])
         }
     }
 
