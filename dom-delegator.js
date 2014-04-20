@@ -2,6 +2,7 @@ var document = require("global/document")
 var DataSet = require("data-set")
 
 var addEvent = require("./add-event.js")
+var removeEvent = require("./remove-event.js")
 var ProxyEvent = require("./proxy-event.js")
 
 module.exports = DOMDelegator
@@ -13,6 +14,7 @@ function DOMDelegator() {
 }
 
 DOMDelegator.prototype.addEventListener = addEvent
+DOMDelegator.prototype.removeEventListener = removeEvent
 
 DOMDelegator.prototype.listenTo = function listenTo(eventName) {
     if (this.events[eventName]) {

@@ -1,4 +1,5 @@
 require("./dom-add-event.js")
+require("./dom-remove-event.js")
 require("./dom-add-multiple.js")
 require("./dom-targets.js")
 require("./dom-delegator.js")
