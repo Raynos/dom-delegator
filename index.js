@@ -1,8 +1,6 @@
 var Individual = require("individual")
-var document = require("global/document")
 
-var addEvent = require("./add-event.js")
-var listen = require("./listen.js")
+var DOMDelegator = require("./dom-delegator.js")
 
 var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@7", {})
 var allEvents = [
@@ -32,20 +30,4 @@ function Delegator(opts) {
     return delegator
 }
 
-function DOMDelegator() {
-    this.target = document.documentElement
-    this.events = {}
-}
 
-DOMDelegator.prototype.addEventListener = addEvent
-
-DOMDelegator.prototype.listenTo = listenTo
-
-function listenTo(eventName) {
-    if (this.events[eventName]) {
-        return
-    }
-
-    this.events[eventName] = true
-    listen(this, eventName)
-}
