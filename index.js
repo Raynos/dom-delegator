@@ -10,6 +10,15 @@ var allEvents = [
     "resize", "scroll", "select", "submit", "unload",
 ]
 
+/*  Delegator is a thin wrapper around a singleton `DOMDelegator`
+        instance.
+
+    Only one DOMDelegator should exist because we do not want
+        duplicate event listeners bound to the DOM.
+
+    `Delegator` will also `listenTo()` all events unless 
+        every caller opts out of it
+*/
 module.exports = Delegator
 
 function Delegator(opts) {
@@ -22,9 +31,9 @@ function Delegator(opts) {
     }
 
     if (opts.defaultEvents !== false) {
-        allEvents.forEach(function (eventName) {
-            delegator.listenTo(eventName)
-        })
+        for (var i = 0; i < allEvents.length; i++) {
+            delegator.listenTo(allEvents[i])
+        }
     }
 
     return delegator
