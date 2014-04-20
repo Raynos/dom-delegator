@@ -1,18 +1,13 @@
-type DOMNode := DOMNode
-
-type Delegator := {
-    target: DOMNode,
-    listenTo: (eventName: String) => void,
-    addEventListener: (DOMNode, String, EventHandler)
-}
-
 type EventHandler := Function | {
     handleEvent: Function
 }
 
-type Listener := {
-    currentTarget: DOMNode,
-    handlers: [Function | EventHandler]
+type Delegator := {
+    target: DOMNode,
+    listenTo: (eventName: String) => void,
+    unlistenTo: (eventName: String) => void,
+    addEventListener: (DOMNode, String, EventHandler),
+    removeEventListener: (DOMNode, String, EventHandler)
 }
 
 dom-delegator := (opts?: {
@@ -25,7 +20,8 @@ dom-delegator/add-event := (
     fn: EventHandler
 ) => void
 
-dom-delegator/get-listener := (DOMNode, type: String ) 
-    => null | Listener
-
-dom-delegator/listen := (Delegator, eventName: String) => void
+dom-delegator/remove-event := (
+    target: DOMNode,
+    type: String,
+    fn: EventHandler
+)
