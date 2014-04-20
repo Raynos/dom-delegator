@@ -73,3 +73,31 @@ test("remove one of multiple events", function (assert) {
         assert.end()
     })
 })
+
+test("removing event doesn't throw", function (assert) {
+    var elem = h("div")
+    document.body.appendChild(elem)
+    var d = Delegator()
+
+    assert.doesNotThrow(function () {
+        d.removeEventListener(elem, "click", function () {})
+    })
+
+    document.body.removeChild(elem)
+    assert.end()
+})
+
+test("removing other listener", function (assert) {
+    var elem = h("div")
+    document.body.appendChild(elem)
+    var d = Delegator()
+
+    d.addEventListener(elem, "click", function () {})
+
+    assert.doesNotThrow(function () {
+        d.removeEventListener(elem, "click", function () {})
+    })
+
+    document.body.removeChild(elem)
+    assert.end()
+    })
