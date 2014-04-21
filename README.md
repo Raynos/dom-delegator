@@ -62,6 +62,34 @@ del.addEventListener(elem.querySelector(".baz"), "click", function (ev) {
 })
 ```
 
+## Example (global listeners)
+
+Sometimes you don't want to add events bound to an element but
+  instead listen to them globally.
+
+```js
+var Delegator = require("dom-delegator")
+
+var d = Delegator()
+d.addGlobalEventListener("keydown", function (ev) {
+    // hit for every global key press
+    // can implement keyboard shortcuts
+
+
+})
+
+d.addEventListener(document.documentElement, "keydown", function (ev) {
+    // hit for every keydown that is not captured
+    // by an element listener lower in the tree
+
+    // by default dom-delegator does not bubble events up
+    // to other listeners on parent nodes
+
+    // you can use global event listeners to intercept everything
+    // even if there are listeners lower in the tree
+})
+```
+
 ## Installation
 
 `npm install dom-delegator`
