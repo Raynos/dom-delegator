@@ -18,18 +18,20 @@
   },
   "dependencies": {
     "data-set": "^3.0.0",
-    "global": "^3.0.0",
+    "global": "^3.0.2",
     "individual": "^0.1.1",
     "inherits": "^2.0.1",
     "xtend": "^2.2.0"
   },
   "devDependencies": {
+    "cuid": "^1.2.4",
     "event-sinks": "~1.0.1",
     "istanbul": "^0.2.6",
     "jshint": "^2.5.0",
     "pre-commit": "0.0.5",
     "run-browser": "^1.3.1",
     "synthetic-dom-events": "^0.2.0",
+    "tap-spec": "^0.1.9",
     "tape": "^2.12.3"
   },
   "licenses": [
