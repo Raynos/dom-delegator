@@ -28,9 +28,9 @@
     "istanbul": "^0.2.6",
     "jshint": "^2.5.0",
     "pre-commit": "0.0.5",
-    "run-browser": "git://github.com/Raynos/run-browser",
+    "run-browser": "^1.3.1",
     "synthetic-dom-events": "^0.2.0",
-    "tape": "^2.12.0"
+    "tape": "^2.12.3"
   },
   "licenses": [
     {
@@ -40,7 +40,8 @@
   ],
   "scripts": {
     "test": "jshint . && node ./test/index.js | tap-spec",
-    "browser": "run-browser ./test/index.js -b | tap-spec",
+    "browser": "run-browser ./test/index.js",
+    "phantom": "run-browser ./test/index.js -b | tap-spec",
     "cover": "istanbul cover --print detail ./test/index.js",
     "view-cover": "istanbul report html && google-chrome ./coverage/index.html"
   },
