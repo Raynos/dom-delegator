@@ -10,11 +10,37 @@ module.exports = DOMDelegator
 function DOMDelegator() {
     this.target = document.documentElement
     this.events = {}
-    this.listeners = {}
+    this.rawEventListeners = {}
+    this.globalListeners = {}
 }
 
 DOMDelegator.prototype.addEventListener = addEvent
 DOMDelegator.prototype.removeEventListener = removeEvent
+
+DOMDelegator.prototype.addGlobalEventListener =
+    function addGlobalEventListener(eventName, fn) {
+        var listeners = this.globalListeners[eventName]
+        if (!listeners) {
+            listeners = this.globalListeners[eventName] = []
+        }
+
+        if (listeners.indexOf(fn) === -1) {
+            listeners.push(fn)
+        }
+    }
+
+DOMDelegator.prototype.removeGlobalEventListener =
+    function removeGlobalEventListener(eventName, fn) {
+        var listeners = this.globalListeners[eventName]
+        if (!listeners) {
+            return
+        }
+
+        var index = listeners.indexOf(fn)
+        if (index !== -1) {
+            listeners.splice(index, 1)
+        }
+    }
 
 DOMDelegator.prototype.listenTo = function listenTo(eventName) {
     if (this.events[eventName]) {
@@ -35,18 +61,18 @@ DOMDelegator.prototype.unlistenTo = function unlistenTo(eventName) {
 }
 
 function listen(delegator, eventName) {
-    var listener = delegator.listeners[eventName]
+    var listener = delegator.rawEventListeners[eventName]
 
     if (!listener) {
-        listener = delegator.listeners[eventName] =
-            createHandler(eventName)
+        listener = delegator.rawEventListeners[eventName] =
+            createHandler(eventName, delegator.globalListeners)
     }
 
     delegator.target.addEventListener(eventName, listener, true)
 }
 
 function unlisten(delegator, eventName) {
-    var listener = delegator.listeners[eventName]
+    var listener = delegator.rawEventListeners[eventName]
 
     if (!listener) {
         throw new Error("dom-delegator#unlistenTo: cannot " +
@@ -56,18 +82,22 @@ function unlisten(delegator, eventName) {
     delegator.target.removeEventListener(eventName, listener, true)
 }
 
-function createHandler(eventName) {
+function createHandler(eventName, globalListeners) {
     return handler
 
     function handler(ev) {
+        var globalHandlers = globalListeners[eventName] || []
         var listener = getListener(ev.target, eventName)
-        if (!listener) {
+
+        var handlers = globalHandlers
+            .concat(listener ? listener.handlers : [])
+        if (handlers.length === 0) {
             return
         }
 
         var arg = new ProxyEvent(ev, listener)
 
-        listener.handlers.forEach(function (handler) {
+        handlers.forEach(function (handler) {
             typeof handler === "function" ?
                 handler(arg) : handler.handleEvent(arg)
         })

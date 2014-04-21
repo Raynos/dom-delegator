@@ -46,7 +46,7 @@ test("delegator throws if mutated manually", function (assert) {
     d.listenTo("foobar")
 
     // NAUGHTY MUTATE
-    d.listeners.foobar = null
+    d.rawEventListeners.foobar = null
 
     assert.throws(function () {
         d.unlistenTo("foobar")
