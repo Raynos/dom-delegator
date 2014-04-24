@@ -12,7 +12,7 @@ var MOUSE_PROPS = [
     "screenX", "screenY", "toElement"
 ]
 
-var rkeyEvent = /^key/
+var rkeyEvent = /^key|input/
 var rmouseEvent = /^(?:mouse|pointer|contextmenu)|click/
 
 module.exports = ProxyEvent
