@@ -17,9 +17,9 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "data-set": "^3.0.0",
-    "global": "^3.0.2",
-    "individual": "^0.1.1",
+    "data-set": "^3.1.0",
+    "global": "^4.2.1",
+    "individual": "^2.0.0",
     "inherits": "^2.0.1",
     "xtend": "^2.2.0"
   },
@@ -30,7 +30,7 @@
     "jshint": "^2.5.0",
     "pre-commit": "0.0.5",
     "run-browser": "^1.3.1",
-    "synthetic-dom-events": "^0.2.0",
+    "synthetic-dom-events": "git://github.com/Raynos/synthetic-dom-events",
     "tap-spec": "^0.1.9",
     "tape": "^2.12.3"
   },
