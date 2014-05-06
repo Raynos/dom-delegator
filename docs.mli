@@ -12,10 +12,10 @@ type Delegator := {
     target: DOMNode,
     listenTo: (eventName: String) => void,
     unlistenTo: (eventName: String) => void,
-    addEventListener: (DOMNode, String, EventHandler),
-    removeEventListener: (DOMNode, String, EventHandler),
-    addGlobalEventListener: (String, EventHandler),
-    removeGlobalEventListener: (String, EventHandler)
+    addEventListener: (DOMNode, String, EventHandler) => void,
+    removeEventListener: (DOMNode, String, EventHandler) => void,
+    addGlobalEventListener: (String, EventHandler) => void,
+    removeGlobalEventListener: (String, EventHandler) => void
 }
 
 dom-delegator := (opts?: {
@@ -36,4 +36,4 @@ dom-delegator/remove-event := (
     target: DOMNode,
     type: String,
     fn: EventHandler
-)
+) => void
