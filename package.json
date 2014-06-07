@@ -17,6 +17,7 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
+    "cuid": "^1.2.4",
     "data-set": "^3.1.0",
     "global": "^4.2.1",
     "individual": "^2.0.0",
