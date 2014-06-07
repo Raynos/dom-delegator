@@ -19,10 +19,11 @@ type Delegator := {
 }
 
 dom-delegator := (opts?: {
-    defaultEvents?: Boolean
+    defaultEvents?: Boolean,
+    document?: Document
 }) => Delegator
 
-dom-delegator/dom-delegator := () => Delegator
+dom-delegator/dom-delegator := (doc?: Document) => Delegator
 
 dom-delegator/add-event := (
     target: DOMNode,

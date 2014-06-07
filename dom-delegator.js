@@ -1,4 +1,4 @@
-var document = require("global/document")
+var globalDocument = require("global/document")
 var DataSet = require("data-set")
 
 var addEvent = require("./add-event.js")
@@ -7,7 +7,9 @@ var ProxyEvent = require("./proxy-event.js")
 
 module.exports = DOMDelegator
 
-function DOMDelegator() {
+function DOMDelegator(document) {
+    document = document || globalDocument
+
     this.target = document.documentElement
     this.events = {}
     this.rawEventListeners = {}

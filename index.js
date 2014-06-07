@@ -1,8 +1,11 @@
 var Individual = require("individual")
+var cuid = require("cuid")
 
 var DOMDelegator = require("./dom-delegator.js")
 
-var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@7", {})
+var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@8", {
+    delegators: {}
+})
 var commonEvents = [
     "blur", "change", "click",  "contextmenu", "dblclick",
     "error","focus", "focusin", "focusout", "input", "keydown",
@@ -23,11 +26,21 @@ module.exports = Delegator
 
 function Delegator(opts) {
     opts = opts || {}
-    var delegator = delegatorCache.delegator
+    var document = opts.document
+
+    var cacheKey = document ? 
+        document["__DOM_DELEGATOR_CACHE_TOKEN@8"] : "global"
+
+    if (!cacheKey) {
+        cacheKey =
+            document["__DOM_DELEGATOR_CACHE_TOKEN@8"] = cuid()
+    }
+
+    var delegator = delegatorCache.delegators[cacheKey]
 
     if (!delegator) {
-        delegator = delegatorCache.delegator =
-            new DOMDelegator()
+        delegator = delegatorCache.delegators[cacheKey] =
+            new DOMDelegator(document)
     }
 
     if (opts.defaultEvents !== false) {
