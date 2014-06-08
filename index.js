@@ -1,9 +1,10 @@
 var Individual = require("individual")
 var cuid = require("cuid")
+var globalDocument = require("global/document")
 
 var DOMDelegator = require("./dom-delegator.js")
 
-var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@8", {
+var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@9", {
     delegators: {}
 })
 var commonEvents = [
@@ -26,14 +27,13 @@ module.exports = Delegator
 
 function Delegator(opts) {
     opts = opts || {}
-    var document = opts.document
+    var document = opts.document || globalDocument
 
-    var cacheKey = document ? 
-        document["__DOM_DELEGATOR_CACHE_TOKEN@8"] : "global"
+    var cacheKey = document["__DOM_DELEGATOR_CACHE_TOKEN@9"]
 
     if (!cacheKey) {
         cacheKey =
-            document["__DOM_DELEGATOR_CACHE_TOKEN@8"] = cuid()
+            document["__DOM_DELEGATOR_CACHE_TOKEN@9"] = cuid()
     }
 
     var delegator = delegatorCache.delegators[cacheKey]
