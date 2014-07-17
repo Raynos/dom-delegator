@@ -11,7 +11,8 @@ var commonEvents = [
     "blur", "change", "click",  "contextmenu", "dblclick",
     "error","focus", "focusin", "focusout", "input", "keydown",
     "keypress", "keyup", "load", "mousedown", "mouseup",
-    "resize", "scroll", "select", "submit", "unload"
+    "resize", "scroll", "select", "submit", "touchcancel",
+    "touchend", "touchstart", "unload"
 ]
 
 /*  Delegator is a thin wrapper around a singleton `DOMDelegator`
