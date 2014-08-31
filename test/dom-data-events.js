@@ -26,6 +26,7 @@ test("setting event listeners with data-set directly", function (assert) {
         assert.equal(values.length, 1)
         assert.equal(values[0].target, elem)
         assert.equal(typeof values[0].preventDefault, "function")
+        assert.equal(typeof values[0].startPropagation, "function")
 
         document.body.removeChild(elem)
         assert.end()

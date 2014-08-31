@@ -17,15 +17,15 @@ var rmouseEvent = /^(?:mouse|pointer|contextmenu)|click/
 
 module.exports = ProxyEvent
 
-function ProxyEvent(ev, listener) {
+function ProxyEvent(ev) {
     if (!(this instanceof ProxyEvent)) {
-        return new ProxyEvent(ev, listener)
+        return new ProxyEvent(ev)
     }
 
     if (rkeyEvent.test(ev.type)) {
-        return new KeyEvent(ev, listener)
+        return new KeyEvent(ev)
     } else if (rmouseEvent.test(ev.type)) {
-        return new MouseEvent(ev, listener)
+        return new MouseEvent(ev)
     }
 
     for (var i = 0; i < ALL_PROPS.length; i++) {
@@ -34,14 +34,18 @@ function ProxyEvent(ev, listener) {
     }
 
     this._rawEvent = ev
-    this.currentTarget = listener ? listener.currentTarget : null
+    this._bubbles = false;
 }
 
 ProxyEvent.prototype.preventDefault = function () {
     this._rawEvent.preventDefault()
 }
 
-function MouseEvent(ev, listener) {
+ProxyEvent.prototype.startPropagation = function () {
+    this._bubbles = true;
+}
+
+function MouseEvent(ev) {
     for (var i = 0; i < ALL_PROPS.length; i++) {
         var propKey = ALL_PROPS[i]
         this[propKey] = ev[propKey]
@@ -53,12 +57,11 @@ function MouseEvent(ev, listener) {
     }
 
     this._rawEvent = ev
-    this.currentTarget = listener ? listener.currentTarget : null
 }
 
 inherits(MouseEvent, ProxyEvent)
 
-function KeyEvent(ev, listener) {
+function KeyEvent(ev) {
     for (var i = 0; i < ALL_PROPS.length; i++) {
         var propKey = ALL_PROPS[i]
         this[propKey] = ev[propKey]
@@ -70,7 +73,6 @@ function KeyEvent(ev, listener) {
     }
 
     this._rawEvent = ev
-    this.currentTarget = listener ? listener.currentTarget : null
 }
 
 inherits(KeyEvent, ProxyEvent)

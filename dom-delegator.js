@@ -67,7 +67,7 @@ function listen(delegator, eventName) {
 
     if (!listener) {
         listener = delegator.rawEventListeners[eventName] =
-            createHandler(eventName, delegator.globalListeners)
+            createHandler(eventName, delegator)
     }
 
     delegator.target.addEventListener(eventName, listener, true)
@@ -84,25 +84,37 @@ function unlisten(delegator, eventName) {
     delegator.target.removeEventListener(eventName, listener, true)
 }
 
-function createHandler(eventName, globalListeners) {
+function createHandler(eventName, delegator) {
+    var globalListeners = delegator.globalListeners;
+    var delegatorTarget = delegator.target;
+
     return handler
 
     function handler(ev) {
         var globalHandlers = globalListeners[eventName] || []
-        var listener = getListener(ev.target, eventName)
 
-        var handlers = globalHandlers
-            .concat(listener ? listener.handlers : [])
-        if (handlers.length === 0) {
-            return
+        if (globalHandlers.length > 0) {
+            var globalEvent = new ProxyEvent(ev);
+            globalEvent.currentTarget = delegatorTarget;
+            callListeners(globalHandlers, globalEvent)
         }
 
-        var arg = new ProxyEvent(ev, listener)
+        findAndInvokeListeners(ev.target, ev, eventName)
+    }
+}
 
-        handlers.forEach(function (handler) {
-            typeof handler === "function" ?
-                handler(arg) : handler.handleEvent(arg)
-        })
+function findAndInvokeListeners(elem, ev, eventName) {
+    var listener = getListener(elem, eventName)
+
+    if (listener && listener.handlers.length > 0) {
+        var listenerEvent = new ProxyEvent(ev);
+        listenerEvent.currentTarget = listener.currentTarget
+        callListeners(listener.handlers, listenerEvent)
+
+        if (listenerEvent._bubbles) {
+            var nextTarget = elem.parentNode
+            findAndInvokeListeners(nextTarget, ev, eventName)
+        }
     }
 }
 
@@ -123,6 +135,13 @@ function getListener(target, type) {
 
     var handlers = [].concat(handler || [], allHandler || [])
     return new Listener(target, handlers)
+}
+
+function callListeners(handlers, ev) {
+    handlers.forEach(function (handler) {
+        typeof handler === "function" ?
+            handler(ev) : handler.handleEvent(ev)
+    })
 }
 
 function Listener(target, handlers) {
