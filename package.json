@@ -1,6 +1,6 @@
 {
   "name": "dom-delegator",
-  "version": "9.0.1",
+  "version": "9.1.0",
   "description": "Decorate elements with delegated events",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
