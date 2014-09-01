@@ -45,22 +45,17 @@ DOMDelegator.prototype.transformHandle =
 
 DOMDelegator.prototype.addGlobalEventListener =
     function addGlobalEventListener(eventName, fn) {
-        var listeners = this.globalListeners[eventName]
-        if (!listeners) {
-            listeners = this.globalListeners[eventName] = []
-        }
-
+        var listeners = this.globalListeners[eventName] || [];
         if (listeners.indexOf(fn) === -1) {
             listeners.push(fn)
         }
+
+        this.globalListeners[eventName] = listeners;
     }
 
 DOMDelegator.prototype.removeGlobalEventListener =
     function removeGlobalEventListener(eventName, fn) {
-        var listeners = this.globalListeners[eventName]
-        if (!listeners) {
-            return
-        }
+        var listeners = this.globalListeners[eventName] || [];
 
         var index = listeners.indexOf(fn)
         if (index !== -1) {
@@ -74,7 +69,14 @@ DOMDelegator.prototype.listenTo = function listenTo(eventName) {
     }
 
     this.events[eventName] = true
-    listen(this, eventName)
+
+    var listener = this.rawEventListeners[eventName]
+    if (!listener) {
+        listener = this.rawEventListeners[eventName] =
+            createHandler(eventName, this)
+    }
+
+    this.target.addEventListener(eventName, listener, true)
 }
 
 DOMDelegator.prototype.unlistenTo = function unlistenTo(eventName) {
@@ -83,29 +85,14 @@ DOMDelegator.prototype.unlistenTo = function unlistenTo(eventName) {
     }
 
     this.events[eventName] = false
-    unlisten(this, eventName)
-}
-
-function listen(delegator, eventName) {
-    var listener = delegator.rawEventListeners[eventName]
-
-    if (!listener) {
-        listener = delegator.rawEventListeners[eventName] =
-            createHandler(eventName, delegator)
-    }
-
-    delegator.target.addEventListener(eventName, listener, true)
-}
-
-function unlisten(delegator, eventName) {
-    var listener = delegator.rawEventListeners[eventName]
+    var listener = this.rawEventListeners[eventName]
 
     if (!listener) {
         throw new Error("dom-delegator#unlistenTo: cannot " +
             "unlisten to " + eventName)
     }
 
-    delegator.target.removeEventListener(eventName, listener, true)
+    this.target.removeEventListener(eventName, listener, true)
 }
 
 function createHandler(eventName, delegator) {

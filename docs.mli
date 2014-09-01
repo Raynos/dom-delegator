@@ -1,7 +1,8 @@
 type ProxyEvent := DOMEvent & {
     _rawEvent: DOMEvent,
     currentTarget: DOMNode,
-    preventDefault: () => void
+    preventDefault: () => void,
+    startPropagation: () => void
 }
 
 type Handle<T> : {
