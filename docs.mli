@@ -4,18 +4,29 @@ type ProxyEvent := DOMEvent & {
     preventDefault: () => void
 }
 
+type Handle<T> : {
+    type: "dom-delegator-handle"
+}
+
 type EventHandler := Function<ProxyEvent> | {
     handleEvent: Function<ProxyEvent>
-}
+} | Handle<ProxyEvent>
 
 type Delegator := {
     target: DOMNode,
     listenTo: (eventName: String) => void,
     unlistenTo: (eventName: String) => void,
+
     addEventListener: (DOMNode, String, EventHandler) => void,
     removeEventListener: (DOMNode, String, EventHandler) => void,
     addGlobalEventListener: (String, EventHandler) => void,
     removeGlobalEventListener: (String, EventHandler) => void
+
+    allocateHandle : (fn: (T) => void) => Handle<T>,
+    transformHandle : (
+        handle: Handle<S <: Object>,
+        lambda: (T) => null | S
+    ) => Handle<T>
 }
 
 dom-delegator := (opts?: {

@@ -1,9 +1,12 @@
 var globalDocument = require("global/document")
 var DataSet = require("data-set")
+var createStore = require("weakmap-shim/create-store")
 
 var addEvent = require("./add-event.js")
 var removeEvent = require("./remove-event.js")
 var ProxyEvent = require("./proxy-event.js")
+
+var HANDLER_STORE = createStore()
 
 module.exports = DOMDelegator
 
@@ -18,6 +21,27 @@ function DOMDelegator(document) {
 
 DOMDelegator.prototype.addEventListener = addEvent
 DOMDelegator.prototype.removeEventListener = removeEvent
+
+DOMDelegator.prototype.allocateHandle =
+    function allocateHandle(func) {
+        var handle = new Handle()
+
+        HANDLER_STORE(handle).func = func;
+
+        return handle
+    }
+
+DOMDelegator.prototype.transformHandle =
+    function transformHandle(handle, lambda) {
+        var func = HANDLER_STORE(handle).func
+
+        return this.allocateHandle(function (ev) {
+            var result = lambda(ev)
+            if (result) {
+                func(result)
+            }
+        })
+    }
 
 DOMDelegator.prototype.addGlobalEventListener =
     function addGlobalEventListener(eventName, fn) {
@@ -139,12 +163,24 @@ function getListener(target, type) {
 
 function callListeners(handlers, ev) {
     handlers.forEach(function (handler) {
-        typeof handler === "function" ?
-            handler(ev) : handler.handleEvent(ev)
+        if (typeof handler === "function") {
+            handler(ev)
+        } else if (typeof handler.handleEvent === "function") {
+            handler.handleEvent(ev)
+        } else if (handler.type === "dom-delegator-handle") {
+            HANDLER_STORE(handler).func(ev)
+        } else {
+            throw new Error("dom-delegator: unknown handler " +
+                "found: " + JSON.stringify(handlers));
+        }
     })
 }
 
 function Listener(target, handlers) {
     this.currentTarget = target
     this.handlers = handlers
+}
+
+function Handle() {
+    this.type = "dom-delegator-handle"
 }
