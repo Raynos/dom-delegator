@@ -123,7 +123,7 @@ function findAndInvokeListeners(elem, ev, eventName) {
         callListeners(listener.handlers, listenerEvent)
 
         if (listenerEvent._bubbles) {
-            var nextTarget = elem.parentNode
+            var nextTarget = listener.currentTarget.parentNode
             findAndInvokeListeners(nextTarget, ev, eventName)
         }
     }
