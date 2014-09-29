@@ -22,7 +22,7 @@ function DOMDelegator(document) {
 DOMDelegator.prototype.addEventListener = addEvent
 DOMDelegator.prototype.removeEventListener = removeEvent
 
-DOMDelegator.prototype.allocateHandle =
+DOMDelegator.allocateHandle =
     function allocateHandle(func) {
         var handle = new Handle()
 
@@ -31,7 +31,7 @@ DOMDelegator.prototype.allocateHandle =
         return handle
     }
 
-DOMDelegator.prototype.transformHandle =
+DOMDelegator.transformHandle =
     function transformHandle(handle, lambda) {
         var func = HANDLER_STORE(handle).func
 

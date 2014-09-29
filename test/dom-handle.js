@@ -13,7 +13,7 @@ test("can listen to handles", function (assert) {
 
     var results = []
 
-    var handle = d.allocateHandle(function (ev) {
+    var handle = Delegator.allocateHandle(function (ev) {
         results.push(ev)
     })
     d.addEventListener(elem, "click", handle)
@@ -34,11 +34,11 @@ test("can transform a handle", function (assert) {
 
     var results = []
 
-    var handle = d.allocateHandle(function (ev) {
+    var handle = Delegator.allocateHandle(function (ev) {
         results.push(ev)
     })
 
-    var handle2 = d.transformHandle(handle, function (ev) {
+    var handle2 = Delegator.transformHandle(handle, function (ev) {
         return { foo: "bar", type: ev.type }
     })
     d.addEventListener(elem, "click", handle2)
@@ -58,11 +58,11 @@ test("transform handle respects falsey", function (assert) {
 
     var results = []
 
-    var handle = d.allocateHandle(function (ev) {
+    var handle = Delegator.allocateHandle(function (ev) {
         results.push(ev)
     })
 
-    var handle2 = d.transformHandle(handle, function (ev) {
+    var handle2 = Delegator.transformHandle(handle, function (ev) {
         return null
     })
     d.addEventListener(elem, "click", handle2)
