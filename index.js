@@ -4,7 +4,10 @@ var globalDocument = require("global/document")
 
 var DOMDelegator = require("./dom-delegator.js")
 
-var delegatorCache = Individual("__DOM_DELEGATOR_CACHE@9", {
+var versionKey = "11"
+var cacheKey = "__DOM_DELEGATOR_CACHE@" + versionKey
+var cacheTokenKey = "__DOM_DELEGATOR_CACHE_TOKEN@" + versionKey
+var delegatorCache = Individual(cacheKey, {
     delegators: {}
 })
 var commonEvents = [
@@ -30,11 +33,11 @@ function Delegator(opts) {
     opts = opts || {}
     var document = opts.document || globalDocument
 
-    var cacheKey = document["__DOM_DELEGATOR_CACHE_TOKEN@9"]
+    var cacheKey = document[cacheTokenKey]
 
     if (!cacheKey) {
         cacheKey =
-            document["__DOM_DELEGATOR_CACHE_TOKEN@9"] = cuid()
+            document[cacheTokenKey] = cuid()
     }
 
     var delegator = delegatorCache.delegators[cacheKey]
