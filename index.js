@@ -11,7 +11,7 @@ var commonEvents = [
     "blur", "change", "click",  "contextmenu", "dblclick",
     "error","focus", "focusin", "focusout", "input", "keydown",
     "keypress", "keyup", "load", "mousedown", "mouseup",
-    "resize", "scroll", "select", "submit", "touchcancel",
+    "resize", "select", "submit", "touchcancel",
     "touchend", "touchstart", "unload"
 ]
 
