@@ -11,6 +11,10 @@ var HANDLER_STORE = createStore()
 module.exports = DOMDelegator
 
 function DOMDelegator(document) {
+    if (!(this instanceof DOMDelegator)) {
+        return new DOMDelegator(document);
+    }
+
     document = document || globalDocument
 
     this.target = document.documentElement
@@ -64,11 +68,15 @@ DOMDelegator.prototype.removeGlobalEventListener =
     }
 
 DOMDelegator.prototype.listenTo = function listenTo(eventName) {
-    if (this.events[eventName]) {
-        return
+    if (!(eventName in this.events)) {
+        this.events[eventName] = 0;
     }
 
-    this.events[eventName] = true
+    this.events[eventName]++;
+
+    if (this.events[eventName] !== 1) {
+        return
+    }
 
     var listener = this.rawEventListeners[eventName]
     if (!listener) {
@@ -80,11 +88,20 @@ DOMDelegator.prototype.listenTo = function listenTo(eventName) {
 }
 
 DOMDelegator.prototype.unlistenTo = function unlistenTo(eventName) {
-    if (!this.events[eventName]) {
+    if (!(eventName in this.events)) {
+        this.events[eventName] = 0;
+    }
+
+    if (this.events[eventName] === 0) {
+        throw new Error("already unlistened to event.");
+    }
+
+    this.events[eventName]--;
+
+    if (this.events[eventName] !== 0) {
         return
     }
 
-    this.events[eventName] = false
     var listener = this.rawEventListeners[eventName]
 
     if (!listener) {
