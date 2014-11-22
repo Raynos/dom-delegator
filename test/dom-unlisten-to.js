@@ -1,18 +1,20 @@
 var test = require("tape")
 var setImmediate = require("timers").setImmediate
-var document = require("global/document")
+var Document = require("global/document").constructor
 
 var h = require("./lib/h.js")
 var createEvent = require("./lib/create-event.js")
 
 var addEvent = require("../add-event.js")
-var Delegator = require("../index.js")
+var Delegator = require("../dom-delegator.js")
 
 test("unlistening to event", function (assert) {
     var elem = h("div")
-    document.body.appendChild(elem)
+    var doc = new Document()
+    doc.body.appendChild(elem)
 
-    var d = Delegator()
+    var d = Delegator(doc)
+    d.listenTo("click")
     var values = []
 
     var fn = function (ev) {
@@ -23,19 +25,17 @@ test("unlistening to event", function (assert) {
 
     d.unlistenTo("click")
 
-    assert.doesNotThrow(function () {
+    assert.throws(function () {
         d.unlistenTo("click")
     })
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)
 
-    d.listenTo("click")
-
     setImmediate(function () {
         assert.equal(values.length, 0)
 
-        document.body.removeChild(elem)
+        doc.body.removeChild(elem)
         assert.end()
     })
 })
