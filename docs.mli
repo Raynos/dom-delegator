@@ -26,7 +26,7 @@ type Delegator := {
     allocateHandle : (fn: (T) => void) => Handle<T>,
     transformHandle : (
         handle: Handle<S <: Object>,
-        lambda: (T) => null | S
+        lambda: (T, broadcast: (S) => void) => void
     ) => Handle<T>
 }
 

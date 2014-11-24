@@ -38,8 +38,8 @@ test("can transform a handle", function (assert) {
         results.push(ev)
     })
 
-    var handle2 = Delegator.transformHandle(handle, function (ev) {
-        return { foo: "bar", type: ev.type }
+    var handle2 = Delegator.transformHandle(handle, function (ev, write) {
+        write({ foo: "bar", type: ev.type })
     })
     d.addEventListener(elem, "click", handle2)
 

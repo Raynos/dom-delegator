@@ -36,14 +36,11 @@ DOMDelegator.allocateHandle =
     }
 
 DOMDelegator.transformHandle =
-    function transformHandle(handle, lambda) {
+    function transformHandle(handle, broadcast) {
         var func = HANDLER_STORE(handle).func
 
         return this.allocateHandle(function (ev) {
-            var result = lambda(ev)
-            if (result) {
-                func(result)
-            }
+            broadcast(ev, func);
         })
     }
 
