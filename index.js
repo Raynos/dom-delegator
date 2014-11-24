@@ -4,7 +4,7 @@ var globalDocument = require("global/document")
 
 var DOMDelegator = require("./dom-delegator.js")
 
-var versionKey = "11"
+var versionKey = "12"
 var cacheKey = "__DOM_DELEGATOR_CACHE@" + versionKey
 var cacheTokenKey = "__DOM_DELEGATOR_CACHE_TOKEN@" + versionKey
 var delegatorCache = Individual(cacheKey, {
