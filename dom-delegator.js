@@ -1,5 +1,5 @@
 var globalDocument = require("global/document")
-var DataSet = require("data-set")
+var EvStore = require("ev-store")
 var createStore = require("weakmap-shim/create-store")
 
 var addEvent = require("./add-event.js")
@@ -149,10 +149,10 @@ function getListener(target, type) {
         return null
     }
 
-    var ds = DataSet(target)
+    var events = EvStore(target)
     // fetch list of handler fns for this event
-    var handler = ds[type]
-    var allHandler = ds.event
+    var handler = events[type]
+    var allHandler = events.event
 
     if (!handler && !allHandler) {
         return getListener(target.parentNode, type)

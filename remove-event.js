@@ -1,19 +1,19 @@
-var DataSet = require("data-set")
+var EvStore = require("ev-store")
 
 module.exports = removeEvent
 
 function removeEvent(target, type, handler) {
-    var ds = DataSet(target)
-    var events = ds[type]
+    var events = EvStore(target)
+    var event = events[type]
 
-    if (!events) {
+    if (!event) {
         return
-    } else if (Array.isArray(events)) {
-        var index = events.indexOf(handler)
+    } else if (Array.isArray(event)) {
+        var index = event.indexOf(handler)
         if (index !== -1) {
-            events.splice(index, 1)
+            event.splice(index, 1)
         }
-    } else if (events === handler) {
-        ds[type] = null
+    } else if (event === handler) {
+        events[type] = null
     }
 }

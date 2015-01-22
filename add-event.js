@@ -1,18 +1,18 @@
-var DataSet = require("data-set")
+var EvStore = require("ev-store")
 
 module.exports = addEvent
 
 function addEvent(target, type, handler) {
-    var ds = DataSet(target)
-    var events = ds[type]
+    var events = EvStore(target)
+    var event = events[type]
 
-    if (!events) {
-        ds[type] = handler
-    } else if (Array.isArray(events)) {
-        if (events.indexOf(handler) === -1) {
-            events.push(handler)
+    if (!event) {
+        events[type] = handler
+    } else if (Array.isArray(event)) {
+        if (event.indexOf(handler) === -1) {
+            event.push(handler)
         }
-    } else if (events !== handler) {
-        ds[type] = [events, handler]
+    } else if (event !== handler) {
+        events[type] = [event, handler]
     }
 }
