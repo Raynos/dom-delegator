@@ -1,21 +1,21 @@
 var test = require("tape")
 var setImmediate = require("timers").setImmediate
 var document = require("global/document")
-var DataSet = require("data-set")
+var EvStore = require("ev-store")
 
 var h = require("./lib/h.js")
 var createEvent = require("./lib/create-event.js")
 
 var Delegator = require("../index.js")
 
-test("setting event listeners with data-set directly", function (assert) {
+test("setting event listeners with ev-store directly", function (assert) {
     var elem = h("div")
     document.body.appendChild(elem)
 
     Delegator()
     var values = []
 
-    DataSet(elem).click = function (ev) {
+    EvStore(elem).click = function (ev) {
         values.push(ev)
     }
 
@@ -54,8 +54,8 @@ test("setting an id'd event handler", function (assert) {
         id: d.id
     }
 
-    DataSet(elem).click = handler
-    DataSet(elem).event = eventHandler
+    EvStore(elem).click = handler
+    EvStore(elem).event = eventHandler
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)
@@ -80,7 +80,7 @@ test("setting data-event to array", function (assert) {
     Delegator()
     var values = []
 
-    DataSet(elem).click = [function (ev) {
+    EvStore(elem).click = [function (ev) {
         values.push(ev)
     }, function (ev) {
         values.push(ev)
@@ -120,7 +120,7 @@ test("data-event to array of id'd handlers", function (assert) {
         id: d.id
     }
 
-    DataSet(elem).event = [submitHandler, changeHandler]
+    EvStore(elem).event = [submitHandler, changeHandler]
 
     var ev = createEvent("click")
     elem.dispatchEvent(ev)
