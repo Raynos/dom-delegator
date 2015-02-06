@@ -145,7 +145,7 @@ function findAndInvokeListeners(elem, ev, eventName) {
 
 function getListener(target, type) {
     // terminate recursion if parent is `null`
-    if (target === null) {
+    if (target === null || typeof target === "undefined") {
         return null
     }
 
